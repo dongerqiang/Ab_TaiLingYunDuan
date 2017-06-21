@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearlayout"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="#ffe9e9e9"
+    android:orientation="vertical" >
+
+
+    <LinearLayout
+        android:id="@+id/bottom"
+        android:layout_width="fill_parent"
+        android:layout_height="60.0dip"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="1.0dip"
+            android:background="#fff6f6f6" />
+
+        <TableLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <TableRow
+                android:id="@+id/tableRow1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:divider="#ffe1e1e1"
+                android:weightSum="101.0" >
+
+                <Button
+                    android:id="@+id/cancle"
+                    android:layout_width="fill_parent"
+                    android:layout_height="59.0dip"
+                    android:layout_weight="50.0"
+                    android:background="@drawable/selector_update_version_btn"
+                    android:text="重新连接"
+                    android:textColor="#ff000000"
+                    android:textSize="16.0sp" />
+
+                <LinearLayout
+                    android:layout_width="1.0dip"
+                    android:layout_height="59.0dip"
+                    android:background="#ffcbcbcb" />
+
+                <LinearLayout
+                    android:layout_width="1.0dip"
+                    android:layout_height="59.0dip"
+                    android:background="#fff6f6f6" />
+
+                <Button
+                    android:id="@+id/exit"
+                    android:layout_width="fill_parent"
+                    android:layout_height="59.0dip"
+                    android:layout_weight="50.0"
+                    android:background="@drawable/selector_update_version_btn"
+                    android:text="退出"
+                    android:textColor="#ff000000"
+                    android:textSize="16.0sp" />
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,15 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+   	android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+    
+    <com.ananda.tailing.bike.view.TitleBarView android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/title_bar" />
+    
+    <WebView android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/consultation_details_vv"/>
+</LinearLayout>

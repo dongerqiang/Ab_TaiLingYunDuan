@@ -1,0 +1,622 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/main_bg"
+    android:orientation="vertical" >
+
+    <com.ananda.tailing.bike.view.TitleBarView
+        android:id="@+id/title_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/common_all_bg"
+            android:orientation="vertical" >
+
+            <RelativeLayout android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:background="@drawable/set_column_bg"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:id="@+id/control_type_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="12dp"
+                    android:contentDescription="@string/imageview"
+                    android:src="@drawable/phone_control" />
+
+                <TextView
+                    android:id="@+id/control_type_tx"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_toRightOf="@id/control_type_img"
+                    android:text="@string/control_type"
+                    android:textColor="@color/login_text_color"
+                    android:textSize="16sp" />
+
+                <RadioGroup
+                    android:id="@+id/control_type_radiogroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <RadioButton
+                        android:id="@+id/control_type_phone_rb"
+                        style="@style/VibrationRadioBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="122dp"
+                        android:layout_marginTop="12dp"
+                        android:textSize="16sp"
+                        android:checked="true"
+                        android:text="@string/controe_type_phone" >
+                    </RadioButton>
+
+                    <RadioButton
+                        android:id="@+id/control_type_hand_rb"
+                        style="@style/VibrationRadioBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginLeft="8dp"
+                        android:textSize="16sp"
+                        android:text="@string/controe_type_hand" >
+                    </RadioButton>
+                </RadioGroup>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/set_column_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:contentDescription="@string/imageview"
+                    android:src="@drawable/car_lock_icon" />
+
+                <TextView
+                    style="@style/setting_textview_style"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/car_locking" />
+
+                <com.ananda.tailing.bike.view.SlipButton
+                    android:id="@+id/unlock_slipbutton"
+                    android:layout_width="70dp"
+                    android:layout_height="40dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/set_column_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:contentDescription="@string/imageview"
+                    android:src="@drawable/car_unlock_icon" />
+
+                <TextView
+                    style="@style/setting_textview_style"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/car_unlocking" />
+
+                <com.ananda.tailing.bike.view.SlipButton
+                    android:id="@+id/lock_slipbutton"
+                    android:layout_width="70dp"
+                    android:layout_height="40dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/set_column_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:contentDescription="@string/imageview"
+                    android:src="@drawable/find_car_alarm_icon" />
+
+                <TextView
+                    style="@style/setting_textview_style"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/find_car_alarm" />
+
+                <com.ananda.tailing.bike.view.SlipButton
+                    android:id="@+id/find_car_slipbutton"
+                    android:layout_width="70dp"
+                    android:layout_height="40dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/set_column_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:contentDescription="@string/imageview"
+                    android:src="@drawable/seat_open_icon" />
+
+                <TextView
+                    style="@style/setting_textview_style"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/saddles_open" />
+
+                <com.ananda.tailing.bike.view.SlipButton
+                    android:id="@+id/saddles_open_slipbutton"
+                    android:layout_width="70dp"
+                    android:layout_height="40dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/set_column_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:contentDescription="@string/imageview"
+                    android:src="@drawable/this_bike_report_icon" />
+
+                <TextView
+                    style="@style/setting_textview_style"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/the_ride_report" />
+
+                <com.ananda.tailing.bike.view.SlipButton
+                    android:id="@+id/ride_report_slipbutton"
+                    android:layout_width="70dp"
+                    android:layout_height="40dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/set_column_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:contentDescription="@string/imageview"
+                    android:src="@drawable/automatic_fortification_icon" />
+
+                <TextView
+                    style="@style/setting_textview_style"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/the_automatic_fortification" />
+
+                <com.ananda.tailing.bike.view.SlipButton
+                    android:id="@+id/automatic_fortification_slipbutton"
+                    android:layout_width="70dp"
+                    android:layout_height="40dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/set_column_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:contentDescription="@string/imageview"
+                    android:src="@drawable/ars_auto_voice_icon" />
+
+                <TextView
+                    style="@style/setting_textview_style"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ars_automatic_voice_function" />
+
+                <com.ananda.tailing.bike.view.SlipButton
+                    android:id="@+id/ars_voice_slipbutton"
+                    android:layout_width="70dp"
+                    android:layout_height="40dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/set_column_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:contentDescription="@string/imageview"
+                    android:src="@drawable/voice_control" />
+
+                <TextView
+                    style="@style/setting_textview_style"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/voice_control" />
+
+                <com.ananda.tailing.bike.view.SlipButton
+                    android:id="@+id/voice_control_slipbutton"
+                    android:layout_width="70dp"
+                    android:layout_height="40dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/set_column_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:contentDescription="@string/imageview"
+                    android:src="@drawable/meter_speed_display_icon" />
+
+                <TextView
+                    style="@style/setting_textview_style"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/meter_speed_display" />
+
+                <com.ananda.tailing.bike.view.SlipButton
+                    android:id="@+id/meter_speed_slipbutton"
+                    android:layout_width="70dp"
+                    android:layout_height="40dp" />
+            </LinearLayout>
+            <!--  -->
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/set_column_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:contentDescription="@string/imageview"
+                    android:src="@drawable/meter_batery_diapaly_icon" />
+
+                <TextView
+                    style="@style/setting_textview_style"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/meter_batery_dispaly" />
+
+                <com.ananda.tailing.bike.view.SlipButton
+                    android:id="@+id/meter_batery_slipbutton"
+                    android:layout_width="70dp"
+                    android:layout_height="40dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/set_column_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:contentDescription="@string/imageview"
+                    android:src="@drawable/version_update_icon" />
+
+                <TextView
+                    style="@style/setting_textview_style"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/version_update_prompt" />
+
+                <com.ananda.tailing.bike.view.SlipButton
+                    android:id="@+id/ersion_update_prompt_slipbutton"
+                    android:layout_width="70dp"
+                    android:layout_height="40dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/set_column_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:contentDescription="@string/imageview"
+                    android:src="@drawable/status_monitor" />
+
+                <TextView
+                    style="@style/setting_textview_style"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/status_monitoring" />
+
+                <com.ananda.tailing.bike.view.SlipButton
+                    android:id="@+id/status_monitoring"
+                    android:layout_width="70dp"
+                    android:layout_height="40dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/set_column_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:contentDescription="@string/imageview"
+                    android:src="@drawable/overload" />
+
+                <TextView
+                    style="@style/setting_textview_style"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/overload" />
+
+                <com.ananda.tailing.bike.view.SlipButton
+                    android:id="@+id/overload"
+                    android:layout_width="70dp"
+                    android:layout_height="40dp" />
+            </LinearLayout>
+
+              <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/set_column_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:contentDescription="@string/imageview"
+                    android:src="@drawable/guard_distance" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="@color/login_text_color"
+                    android:textSize="16sp"
+                    android:text="@string/guard_distance" />
+
+                <TextView android:id="@+id/guard_distance_show_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="112dp"
+                    android:textSize="16sp"
+                    android:text="非常近"
+                    android:textColor="@color/white" />
+                
+                <Button android:id="@+id/guard_distance_setting_bt"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:layout_marginLeft="10dp"
+					android:background="@drawable/guard_distance_selector" />
+            </LinearLayout>
+            
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="80dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="30dp"
+                android:background="@drawable/set_column_bg"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:id="@+id/vibration_level_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="12dp"
+                    android:contentDescription="@string/imageview"
+                    android:src="@drawable/vibration_level" />
+
+                <TextView
+                    android:id="@+id/vibration_level_tx"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_toRightOf="@id/vibration_level_img"
+                    android:text="@string/vibration_level"
+                    android:textColor="@color/login_text_color"
+                    android:textSize="16sp" />
+
+                <RadioGroup
+                    android:id="@+id/vibration_radiogroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <RadioButton
+                        android:id="@+id/vibration_level_1"
+                        style="@style/VibrationRadioBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="130dp"
+                        android:layout_marginTop="12dp"
+                        android:textSize="16sp"
+                        android:text="@string/vibration_level_1" >
+                    </RadioButton>
+
+                    <RadioButton
+                        android:id="@+id/vibration_level_2"
+                        style="@style/VibrationRadioBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginLeft="8dp"
+                        android:textSize="16sp"
+                        android:text="@string/vibration_level_2" >
+                    </RadioButton>
+
+                    <RadioButton
+                        android:id="@+id/vibration_level_3"
+                        style="@style/VibrationRadioBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="-198dp"
+                        android:layout_marginTop="40dp"
+                        android:checked="true"
+                        android:textSize="16sp"
+                        android:text="@string/vibration_level_3" >
+                    </RadioButton>
+
+                    <RadioButton
+                        android:id="@+id/vibration_level_4"
+                        style="@style/VibrationRadioBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="26dp"
+                        android:layout_marginTop="40dp"
+                        android:textSize="16sp"
+                        android:text="@string/vibration_level_4" >
+                    </RadioButton>
+
+                    <RadioButton
+                        android:id="@+id/vibration_level_5"
+                        style="@style/VibrationRadioBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="27dp"
+                        android:layout_marginTop="40dp"
+                        android:textSize="16sp"
+                        android:text="@string/vibration_level_5" >
+                    </RadioButton>
+                </RadioGroup>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/set_column_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:contentDescription="@string/imageview"
+                    android:src="@drawable/warning_message_icon" />
+
+                <TextView
+                    style="@style/setting_textview_style"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/warning_message_prompts" />
+
+                <com.ananda.tailing.bike.view.SlipButton
+                    android:id="@+id/warning_message_prompts_slipbutton"
+                    android:layout_width="70dp"
+                    android:layout_height="40dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/set_column_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:contentDescription="@string/imageview"
+                    android:src="@drawable/push_message_icon" />
+
+                <TextView
+                    style="@style/setting_textview_style"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/promotional_messages_push" />
+
+                <com.ananda.tailing.bike.view.SlipButton
+                    android:id="@+id/promotional_messages_push_slipbutton"
+                    android:layout_width="70dp"
+                    android:layout_height="40dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

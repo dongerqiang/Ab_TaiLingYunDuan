@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+    <com.ananda.tailing.bike.view.TitleBarView android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/title_bar" />
+    <LinearLayout android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="1">
+	     <ScrollView 
+	        android:id="@+id/ars_scrollview"
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent"
+	        android:scrollbars="none">
+		    <LinearLayout android:layout_width="fill_parent"
+		        android:layout_height="fill_parent"
+		        android:orientation="vertical">
+		        <!-- 刹车故障  -->
+			    <LinearLayout android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:orientation="horizontal"
+			        android:id="@+id/brake_layout"
+			        android:background="@drawable/ars_close_bg">
+			        <ImageView android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:id="@+id/brake_imageview"
+			            android:background="@drawable/brake_icon"
+			            android:contentDescription="@string/app_name" />
+			        <TextView android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:text="@string/brake_failure"
+			            android:id="@+id/brake_textview"
+			            style="@style/ars_textview_style" />
+			    </LinearLayout>
+			    <LinearLayout android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:orientation="horizontal"
+			        android:visibility="gone"
+			        android:id="@+id/brake_top_layout"
+			        android:background="@drawable/ars_open_bg">
+			        <ImageView android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:background="@drawable/brake_icon"
+			            android:id="@+id/brake_other_imageview"
+			            android:contentDescription="@string/app_name" />
+			        <TextView android:layout_width="0dp"
+			            android:layout_height="wrap_content"
+			            android:text="@string/brake_failure"
+			            android:id="@+id/brake_other_textview"
+			            style="@style/ars_textview_top_style" />
+			        <Button android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:id="@+id/brake_audio_button"
+			            android:background="@drawable/audio_selector" />
+			    </LinearLayout>
+			    <LinearLayout android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:orientation="vertical"
+			        android:id="@+id/brake_open_layout"
+			        style="@style/ars_linearlayout_open_style">
+			        <com.ananda.tailing.bike.view.MyListView 
+			            android:layout_width="fill_parent"
+			            android:layout_height="fill_parent"
+						android:id="@+id/brake_ars_listview"				
+			            style="@style/ars_listview_style" />
+			        <include android:id="@+id/empty_layout_brake"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            layout="@layout/empty_layout"
+			            android:visibility="gone" />
+			    </LinearLayout>		
+		        <!-- 转把故障 -->
+			    <LinearLayout android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:orientation="horizontal"
+			        android:id="@+id/turn_layout"
+			        android:background="@drawable/ars_close_bg">
+			        <ImageView android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:id="@+id/turn_imageview"
+			            android:background="@drawable/turn_icon"
+			            android:contentDescription="@string/app_name" />
+			        <TextView android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:text="@string/turn_failure"
+			            android:id="@+id/turn_textview"
+			            style="@style/ars_textview_style" />
+			    </LinearLayout>
+			    <LinearLayout android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:orientation="horizontal"
+			        android:visibility="gone"
+			        android:id="@+id/turn_top_layout"
+			        android:background="@drawable/ars_open_bg">
+			        <ImageView android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:background="@drawable/turn_icon"
+			            android:id="@+id/turn_other_imageview"
+			            android:contentDescription="@string/app_name" />
+			        <TextView android:layout_width="0dp"
+			            android:layout_height="wrap_content"
+			            android:text="@string/turn_failure"	          
+			            android:id="@+id/turn_other_textview"
+			            style="@style/ars_textview_top_style" />
+			        <Button android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:id="@+id/turn_audio_button"
+			            android:background="@drawable/audio_selector" />
+			    </LinearLayout>
+			    <LinearLayout android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:orientation="vertical"
+			        android:id="@+id/turn_open_layout"
+			        style="@style/ars_linearlayout_open_style">
+			        <com.ananda.tailing.bike.view.MyListView 
+			            android:layout_width="fill_parent"
+			            android:layout_height="fill_parent"
+						android:id="@+id/turn_ars_listview"				
+			            style="@style/ars_listview_style" />
+			        <include android:id="@+id/empty_layout_turn"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            layout="@layout/empty_layout"
+			            android:visibility="gone" />
+			    </LinearLayout>
+			    <!-- 电机故障   -->
+			    <LinearLayout android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:orientation="horizontal"
+			        android:id="@+id/motors_layout"
+			        android:background="@drawable/ars_close_bg">
+			        <ImageView android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:id="@+id/motors_imageview"
+			            android:background="@drawable/motors_icon"
+			            android:contentDescription="@string/app_name" />
+			        <TextView android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:text="@string/motors_failure"
+			            android:id="@+id/motors_textview"
+			            style="@style/ars_textview_style" />
+			    </LinearLayout>
+			    <LinearLayout android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:orientation="horizontal"
+			        android:visibility="gone"
+			        android:id="@+id/motors_top_layout"
+			        android:background="@drawable/ars_open_bg">
+			        <ImageView android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:background="@drawable/motors_icon"
+			            android:id="@+id/motors_other_imageview"
+			            android:contentDescription="@string/app_name" />
+			        <TextView android:layout_width="0dp"
+			            android:layout_height="wrap_content"
+			            android:text="@string/motors_failure"
+			            android:id="@+id/motors_other_textview"
+			            style="@style/ars_textview_top_style" />
+			        <Button android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:id="@+id/motors_audio_button"
+			            android:background="@drawable/audio_selector" />
+			    </LinearLayout>
+			    <LinearLayout android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:orientation="vertical"
+			        android:id="@+id/motors_open_layout"
+			        style="@style/ars_linearlayout_open_style">
+			        <com.ananda.tailing.bike.view.MyListView 
+			            android:layout_width="fill_parent"
+			            android:layout_height="fill_parent"
+						android:id="@+id/motors_ars_listview"
+			            style="@style/ars_listview_style" />
+			        <include android:id="@+id/empty_layout_motors"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            layout="@layout/empty_layout"
+			            android:visibility="gone" />
+			    </LinearLayout>		    		  
+			           		    
+			    <!-- 混合故障  -->
+			    <LinearLayout android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:orientation="horizontal"
+			        android:id="@+id/mixed_layout"
+			        android:background="@drawable/ars_close_bg">
+			        <ImageView android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:background="@drawable/mixed_icon"
+			            android:contentDescription="@string/app_name" />
+			        <TextView android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:layout_gravity="center"
+			            android:text="@string/mixed_failure"
+			            android:textColor="@color/black"
+			            android:textSize="16sp"
+			            android:layout_marginLeft="5dp" />
+			    </LinearLayout>
+			    <LinearLayout android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:orientation="horizontal"		        
+			        android:visibility="gone"
+			        android:id="@+id/mixed_top_layout"
+			        android:background="@drawable/ars_open_bg">
+			        <ImageView android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:background="@drawable/mixed_icon"
+			            android:id="@+id/mixed_imageview"
+			            android:contentDescription="@string/app_name" />
+			        <TextView android:layout_width="0dp"
+			            android:layout_height="wrap_content"
+			            android:text="@string/mixed_failure"
+			            android:id="@+id/mixed_textview"
+			            style="@style/ars_textview_top_style" />
+			        <Button android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:id="@+id/mixed_audio_button"
+			            android:background="@drawable/audio_selector" />
+			    </LinearLayout>
+			    <LinearLayout android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:orientation="vertical"
+			        android:id="@+id/mixed_open_layout"
+			        style="@style/ars_linearlayout_open_style">
+			        <com.ananda.tailing.bike.view.MyListView 
+			            android:layout_width="fill_parent"
+			            android:layout_height="fill_parent"
+						android:id="@+id/mixed_ars_listview"				
+			            style="@style/ars_listview_style" />
+			        <include android:id="@+id/empty_layout_mixed"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            layout="@layout/empty_layout"
+			            android:visibility="gone" />
+			    </LinearLayout>
+			    
+			    <!-- 控制器故障  -->
+			    <LinearLayout android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:orientation="horizontal"
+			        android:id="@+id/control_layout"
+			        android:visibility="gone"
+			        android:background="@drawable/ars_close_bg">
+			        <ImageView android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:background="@drawable/mixed_icon"
+			            android:contentDescription="@string/app_name" />
+			        <TextView android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:layout_gravity="center"
+			            android:text="@string/control_failure"
+			            android:textColor="@color/black"
+			            android:textSize="16sp"
+			            android:layout_marginLeft="5dp" />
+			    </LinearLayout>
+			    <LinearLayout android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:orientation="horizontal"		        
+			        android:visibility="gone"
+			        android:id="@+id/control_top_layout"
+			        android:background="@drawable/ars_open_bg">
+			        <ImageView android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:background="@drawable/mixed_icon"
+			            android:id="@+id/control_imageview"
+			            android:contentDescription="@string/app_name" />
+			        <TextView android:layout_width="0dp"
+			            android:layout_height="wrap_content"
+			            android:text="@string/mixed_failure"
+			            android:id="@+id/control_textview"
+			            style="@style/ars_textview_top_style" />
+			        <Button android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:id="@+id/control_audio_button"
+			            android:background="@drawable/audio_selector" />
+			    </LinearLayout>
+			    <LinearLayout android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:orientation="vertical"
+			        android:id="@+id/control_open_layout"
+			        style="@style/ars_linearlayout_open_style">
+			        <com.ananda.tailing.bike.view.MyListView 
+			            android:layout_width="fill_parent"
+			            android:layout_height="fill_parent"
+						android:id="@+id/mixed_ars_listview"				
+			            style="@style/ars_listview_style" />
+			        <include android:id="@+id/empty_layout_mixed"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            layout="@layout/empty_layout"
+			            android:visibility="gone" />
+			    </LinearLayout>
+		    </LinearLayout>
+	    </ScrollView>
+    </LinearLayout>
+    
+</LinearLayout>

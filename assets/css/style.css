@@ -1,0 +1,11 @@
+@charset "utf-8";
+
+/*正文*/
+.main{padding:25px 25px;font-size:14px}
+.main h3{font:700 18px/45px Microsoft yahei;color:#346fb8;text-align:center;padding-top:30px;}
+.title{height:50px;margin-bottom:20px;}
+.title span{background:url(../images/title_bg2.jpg) repeat-x;float:left}
+.title i{height:50px;padding:0 56px 0 18px;font:700 22px/46px Microsoft yahei;color:#fff;background:url(../images/title_bg.jpg) right no-repeat;display:block}
+.main p{font:14px/24px Microsoft yahei;color:#37414d;text-indent:30px;padding:6px 0;}
+.pic{text-align:center;padding:10px 0}
+.pic img{width:98%;}

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+    <com.ananda.tailing.bike.view.TitleBarView android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/title_bar" />
+    
+     <ImageView
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:src="@drawable/consultation_banner" />
+     
+    
+    
+    <ScrollView android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:divider="@null"
+        android:fadingEdge="none"
+        android:scrollbars="none">
+        
+        <com.ananda.tailing.bike.view.ScrollListView
+            android:id="@+id/list_consultation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:cacheColorHint="@null"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:scrollbars="@null" >
+        </com.ananda.tailing.bike.view.ScrollListView>
+    </ScrollView>
+    
+    
+    <RelativeLayout android:layout_width="match_parent"
+        android:layout_height="match_parent">
+     <com.ananda.tailing.bike.view.TabBarView
+        android:id="@+id/tab_bar"
+       	android:layout_alignParentBottom="true"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+     
+     </RelativeLayout>
+</LinearLayout>

@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.ananda.tailing.bike"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:maxSdkVersion="19"
+        android:minSdkVersion="18" />
+    
+    <!-- 网络权限设置 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- 在SDCard中创建与删除文件权限 -->
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <!-- 往SDCard写入数据权限 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+
+    <!-- wifi权限设置 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- 设置蓝牙权限 -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <!-- 声明应用需要使用设备的蓝牙BLE -->
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="true" />
+    <!-- 扫描权限 -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <!-- Push service 运行需要的权限 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+
+    <!-- for log. -->
+    <uses-permission android:name="android.permission.ACCESS_DOWNLOAD_MANAGER" />
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <application
+        android:name=".activity.MyApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/logo"
+        android:label="@string/app_name"
+        android:theme="@style/app_theme"
+        android:largeHeap="true" >
+
+        <activity
+            android:name="com.ananda.tailing.bike.activity.WeclomeActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+		<service android:enabled="true" android:name=".SmartBikeService"/> 
+        <!-- 首页 -->
+        <activity
+            android:name="com.ananda.tailing.bike.activity.MainActivity"
+            android:screenOrientation="portrait" />
+        <!-- 遥控 -->
+        <activity
+            android:name="com.ananda.tailing.bike.activity.RomtorActivity"
+            android:screenOrientation="portrait" />
+         <activity
+            android:name="com.ananda.tailing.bike.smartbike.ScanActivity"
+            android:screenOrientation="portrait" />
+          <activity
+            android:name="com.ananda.tailing.bike.smartbike.ScanTestActivity"
+            android:screenOrientation="portrait" />
+        <!-- 仪表 -->
+        <activity android:name="com.ananda.tailing.bike.activity.MeterActivity"
+            android:screenOrientation="portrait" /> />
+        <!-- ARS -->
+        <activity
+            android:name="com.ananda.tailing.bike.activity.ARSActivity"
+            android:screenOrientation="portrait" />
+         <!-- 资讯 -->
+        <activity
+            android:name="com.ananda.tailing.bike.activity.consultation.ConsultationItemDetailsActivity"
+            android:screenOrientation="portrait" />
+         <activity
+            android:name="com.ananda.tailing.bike.activity.ConsultationActivity"
+            android:screenOrientation="portrait" />
+        <!-- 更多 -->
+        <activity
+            android:name="com.ananda.tailing.bike.activity.MoreActivity"
+            android:screenOrientation="portrait" />
+        <!-- 蓝牙设置地址 -->
+        <activity
+            android:name="com.ananda.tailing.bike.activity.DeviceListActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/select_device"
+            android:theme="@android:style/Theme.Dialog" />      
+        <!-- 登录 -->
+        <activity
+            android:name="com.ananda.tailing.bike.activity.more.LoginActivity"
+            android:screenOrientation="portrait" />
+        <!-- 注册 -->
+        <activity
+            android:name="com.ananda.tailing.bike.activity.more.RegisterActivity"
+            android:screenOrientation="portrait" />
+        <!-- 帮助信息 -->
+        <activity
+            android:name="com.ananda.tailing.bike.activity.more.HelpActivity"
+            android:screenOrientation="portrait" />
+        <!-- 用户信息 -->
+        <activity
+            android:name="com.ananda.tailing.bike.activity.more.UserInfoActivity"
+            android:screenOrientation="portrait" />
+        <!-- 产品信息 -->
+        <activity
+            android:name="com.ananda.tailing.bike.activity.more.GoodsActivity"
+            android:screenOrientation="portrait" />
+        <!-- 设置 -->
+        <activity
+            android:name="com.ananda.tailing.bike.activity.more.SettingActivity"
+            android:screenOrientation="portrait" />
+        <!-- 关于我们 -->
+        <activity
+            android:name="com.ananda.tailing.bike.activity.more.AboutActivity"
+            android:screenOrientation="portrait" />
+        <!-- 修改密码 -->
+        <activity
+            android:name="com.ananda.tailing.bike.activity.more.AmendPwdActivity"
+            android:screenOrientation="portrait" />
+        <!-- 蓝牙修改密码 -->
+        <activity
+            android:name="com.ananda.tailing.bike.activity.more.BluetoothPwdActivity"
+            android:screenOrientation="portrait" />
+        <!-- 注销用户名 -->
+        <activity
+            android:name="com.ananda.tailing.bike.activity.more.CancellationActivity"
+            android:screenOrientation="portrait" />
+        <!-- 找回密码 -->
+        <activity
+            android:name="com.ananda.tailing.bike.activity.more.LookForPwdActivity"
+            android:screenOrientation="portrait" />
+        <!-- 编辑用户信息 -->
+        <activity
+            android:name="com.ananda.tailing.bike.activity.more.EditUserInfoActivity"
+            android:screenOrientation="portrait" />
+        <!-- 扫描界面 -->
+        <activity
+            android:name="com.google.zxing.client.android.CaptureActivity"
+            android:screenOrientation="portrait" />
+        <!-- 扫描界面 -->
+        <activity
+            android:name="com.ananda.tailing.bike.activity.more.QrCodeActivity"
+            android:screenOrientation="portrait" />
+        <!-- 其他信息填写 -->
+        <activity
+            android:name="com.ananda.tailing.bike.activity.more.OtherInfoActivity"
+            android:screenOrientation="portrait" />
+        
+        <service
+            android:name="com.xiaofu_yan.blux.le.server.BluxSsService"
+            android:exported="true"
+            android:label="BluxGuard_Server" >
+            <intent-filter>
+                <action android:name="com.xiaofu_yan.blux.le.server.BluxSsService.ACTION" />
+            </intent-filter>
+        </service>
+    </application>
+    
+    <!-- 用于屏幕适配 -->
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true" />
+
+</manifest>

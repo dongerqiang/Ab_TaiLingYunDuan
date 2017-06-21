@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/tab_bar"
+        android:baselineAligned="false"
+        android:orientation="horizontal" >
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1" >
+
+            <ImageView
+                android:id="@+id/imageview_romtor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/romtor_selector" />
+
+            <TextView
+                android:id="@+id/textview_romtor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|top"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/remote_control"
+                android:textColor="@color/tl_item_text_selector"
+                android:textSize="16sp" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1" >
+
+            <ImageView
+                android:id="@+id/imageview_meter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/meter_selector" />
+
+            <TextView
+                android:id="@+id/textview_meter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|top"
+                android:layout_marginTop="5dp"
+                android:text="@string/meter"
+                android:textColor="@color/tl_item_text_selector"
+                android:textSize="16sp" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1" >
+
+            <ImageView
+                android:id="@+id/imageview_ars"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+				android:layout_marginRight="13dp"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/ars_selector" />
+
+            <TextView
+                android:id="@+id/textview_ars"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|top"
+                android:layout_marginTop="5dp"
+                android:text="@string/ars"
+                android:textColor="@color/tl_item_text_selector"
+                android:textSize="16sp" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1" >
+
+            <ImageView
+                android:id="@+id/imageview_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/more_selector" />
+
+            <TextView
+                android:id="@+id/textview_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|top"
+                android:layout_marginRight="13dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/more"
+                android:textColor="@color/tl_item_text_selector"
+                android:textSize="16sp" />
+        </FrameLayout>
+    </LinearLayout>
+
+</LinearLayout>

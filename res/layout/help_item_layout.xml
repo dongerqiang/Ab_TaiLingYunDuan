@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    <LinearLayout android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical" >        
+        <LinearLayout android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@drawable/ars_item_open_top_bg">
+            <ImageView android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/step_label"/>
+            <TextView android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="第一步"
+                android:textSize="14sp"
+                android:id="@+id/step_textview"
+                android:layout_gravity="center"
+                android:textColor="@color/ars_item_text_color" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/ars_item_open_down_bg">
+            <ImageView android:layout_width="130dp"
+                android:layout_height="100dp"
+                android:id="@+id/help_item_imageview"
+                android:scaleType="centerCrop"
+                android:visibility="gone"
+                android:contentDescription="@string/imageview" />
+            <TextView 
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/item_str"
+                android:textSize="15sp"
+                android:textColor="@color/black"
+                android:id="@+id/help_item_str_textview"
+                android:layout_marginLeft="10dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

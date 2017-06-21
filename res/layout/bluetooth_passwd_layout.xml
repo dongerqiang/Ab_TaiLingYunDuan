@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    <com.ananda.tailing.bike.view.TitleBarView 
+        android:id="@+id/title_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+	<LinearLayout android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/login_bg">
+        <FrameLayout android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+		    <!-- 原密码 -->
+		    <LinearLayout android:layout_width="fill_parent"
+		        android:layout_height="wrap_content"        
+		        android:orientation="horizontal"
+		        android:layout_marginTop="20dp">
+		        <LinearLayout android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:orientation="horizontal"
+		            android:background="@drawable/edit_left">
+			        <ImageView android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:layout_gravity="center"
+			            android:src="@drawable/key"
+	            		android:contentDescription="@string/imageview" />
+			        <TextView android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:text="@string/bluetooth_pwd"			            
+			            style="@style/amend_password_text_style" />
+		        </LinearLayout>
+	   	        <LinearLayout android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:orientation="horizontal"
+		            android:id="@+id/bluetooth_pwd_linearlayout"
+		            android:background="@drawable/input_all_selector">		        
+			        <EditText android:layout_width="190dp"
+			            android:layout_height="wrap_content"
+			            android:id="@+id/bluetooth_pwd_edittext"
+			            android:tag="1"
+			            android:hint="@string/input_bluetooth_pwd"
+			            style="@style/amend_password_style" />   			       
+		        </LinearLayout>
+		    </LinearLayout>
+		    <ImageView android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:id="@+id/bluetooth_pwd_imageview"
+	            android:visibility="gone"	     
+	            android:contentDescription="@string/imageview"           
+	            style="@style/register_imageview_style" />
+	    </FrameLayout>
+	   
+	     <LinearLayout android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"        
+	        android:orientation="horizontal"
+	        android:layout_marginTop="20dp" >
+	        <ImageView android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_gravity="center"
+	            android:contentDescription="@string/imageview"
+	            android:background="@drawable/urgent_icon"/>
+	        <TextView android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="@string/please_turn_on_the_bluetooth_to_complete_this_operation"
+	            android:textSize="16sp"
+	            android:layout_marginLeft="10dp"
+	            android:layout_gravity="center"
+	            android:textColor="@color/check_hint_color" />
+	    </LinearLayout>
+        
+	    <LinearLayout android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="horizontal"
+	        android:layout_marginTop="35dp"
+	        android:layout_marginBottom="8dp" >        
+	        <Button android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:text="@string/previous"
+	            android:layout_marginRight="15dp"
+	            android:id="@+id/previous_button"
+	            android:textColor="@color/login_press_color"
+	            android:background="@drawable/button_normal_selector"
+	            style="@style/login_button_style" />
+	        
+	        <Button android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:text="@string/next"
+	            android:textColor="@color/login_press_color"
+	            android:layout_marginLeft="15dp"
+	            android:id="@+id/next_button"
+	            android:background="@drawable/button_normal_selector"
+	            style="@style/login_button_style" />
+	    </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="350dp"
+    android:layout_height="700dp"
+    android:orientation="vertical" >
+    <LinearLayout android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginTop="80dp"
+        android:background="@drawable/dialog_bg">
+        <TextView android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="检测设备中..."
+            android:textSize="18sp"
+            android:layout_marginTop="20dp" />
+        <RelativeLayout android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="32dp">
+            <TextView android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="当前电量: 100%"
+	            android:textSize="16sp"
+	            android:id="@+id/text_batery"
+	            android:layout_alignParentLeft="true" />
+	        <TextView android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="蓝牙连接状态: 已连接"
+	            android:textSize="16sp"
+	            android:layout_marginTop="5dp"
+	            android:layout_below="@+id/text_batery"
+	            android:id="@+id/text_connection_status"
+	            android:layout_alignParentLeft="true" />
+	        <TextView android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="整车状态正常, 欢迎使用!"
+	            android:textSize="16sp"
+	            android:layout_marginTop="5dp"
+	            android:layout_below="@+id/text_connection_status"
+	            android:layout_alignParentLeft="true" />
+        </RelativeLayout>
+        
+        <LinearLayout android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp">
+            <TextView android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:text="电机"
+                android:gravity="center"
+                android:textSize="16sp"/>
+            <TextView android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="正常"              
+                android:gravity="center" />
+        </LinearLayout>
+        <LinearLayout android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp">
+            <TextView android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:text="转把"
+                android:gravity="center"
+                android:textSize="16sp"/>
+            <TextView android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="正常"              
+                android:gravity="center" />
+        </LinearLayout>
+        <LinearLayout android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp">
+            <TextView android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:text="综合"
+                android:gravity="center"
+                android:textSize="16sp"/>
+            <TextView android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="正常"              
+                android:gravity="center" />
+        </LinearLayout>
+        <LinearLayout android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="40dp">
+            <Button android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="确定"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="20dp"
+                android:id="@+id/confrim_button"
+                android:background="@drawable/batery_low_selector"/>
+            <Button android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="跳过"
+                android:layout_weight="1"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="20dp"
+                android:id="@+id/slip_button"
+                android:background="@drawable/batery_low_selector"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

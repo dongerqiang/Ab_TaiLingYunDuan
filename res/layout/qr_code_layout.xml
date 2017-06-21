@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:background="@drawable/main_bg" >
+    <com.ananda.tailing.bike.view.TitleBarView 
+        android:id="@+id/title_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+    <TextView android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/code_info"
+        android:textSize="18sp"
+        android:layout_marginTop="20dp" />
+	<LinearLayout android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="35dp"
+        android:layout_marginBottom="8dp" >        
+        <Button android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/scan"
+            android:layout_marginRight="15dp"
+            android:layout_marginLeft="15dp"
+            android:id="@+id/scan_button"
+            android:textColor="@color/login_press_color"
+            android:background="@drawable/button_normal_selector"
+            style="@style/login_button_style" />
+        
+        <Button android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/skip"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:id="@+id/skip_button"
+            android:textColor="@color/login_press_color"
+            android:background="@drawable/button_normal_selector"
+            style="@style/login_button_style" />
+    </LinearLayout>
+</LinearLayout>

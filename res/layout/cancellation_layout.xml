@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/main_bg"
+    android:orientation="vertical" >
+
+    <com.ananda.tailing.bike.view.TitleBarView
+        android:id="@+id/title_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/login_bg"
+        android:orientation="vertical" >
+        
+        <!-- 姓名 -->
+        <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_left"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/user" />
+
+                    <TextView
+                        android:layout_width="65dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/name"
+                        style="@style/cancell_textview_style" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/input_all_selector"
+                    android:orientation="horizontal"
+                    android:id="@+id/name_linearlayout" >
+                    <EditText
+                        android:id="@+id/name_edittext"
+                        android:layout_width="190dp"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/input_name"
+                        android:tag="1"
+                        style="@style/cancell_edittext_style" />
+                </LinearLayout>
+            </LinearLayout>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+				android:id="@+id/name_imageview"
+				android:visibility="gone"
+				style="@style/register_imageview_style"
+				android:contentDescription="@string/imageview" />
+        </FrameLayout>
+
+        <!-- 身份证号码 -->
+        <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+	        <LinearLayout
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_marginTop="20dp"
+	            android:orientation="horizontal" >
+	
+	            <LinearLayout
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:background="@drawable/edit_left"
+	                android:orientation="horizontal" >
+	
+	                <ImageView
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:layout_gravity="center"
+	                    android:src="@drawable/id_card" />
+	
+	                <TextView
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:text="@string/id_card"
+                        style="@style/cancell_textview_style" />
+	            </LinearLayout>
+	
+	            <LinearLayout
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:background="@drawable/input_all_selector"
+	                android:orientation="horizontal"
+	                android:id="@+id/card_linearlayout" >
+	
+	                <EditText
+	                    android:id="@+id/card_edittext"
+	                    android:layout_width="190dp"
+	                    android:layout_height="wrap_content"
+	                    android:hint="@string/input_id_number"
+	                    android:inputType="number"
+	                    android:tag="2"
+	                    style="@style/cancell_edittext_style" />
+	            </LinearLayout>
+	        </LinearLayout>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+				android:id="@+id/card_imageview"				
+				android:visibility="gone"
+				style="@style/register_imageview_style"
+				android:contentDescription="@string/imageview" />
+        </FrameLayout>
+	        
+        <!-- 手机号码 -->
+        <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+	        <LinearLayout
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_marginTop="15dp"
+	            android:orientation="horizontal" >
+	
+	            <LinearLayout
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:background="@drawable/edit_left"
+	                android:orientation="horizontal" >
+	
+	                <ImageView
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:layout_gravity="center"
+	                    android:contentDescription="@string/imageview"
+	                    android:src="@drawable/phone_icon" />
+	
+	                <TextView
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:text="@string/look_mobile_phone"
+                        style="@style/cancell_textview_style" />
+	            </LinearLayout>
+	
+	            <LinearLayout
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:background="@drawable/input_all_selector"
+	                android:orientation="horizontal"
+	                android:id="@+id/mobile_linearlayout" >
+	
+	                <EditText
+	                    android:id="@+id/mobile_edittext"
+	                    android:layout_width="190dp"
+	                    android:layout_height="wrap_content"
+	                    android:hint="@string/input_mobile_phone"
+	                    android:inputType="number"
+	                    android:tag="3"
+	                    style="@style/cancell_edittext_style" />
+	            </LinearLayout>
+	        </LinearLayout>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+				android:id="@+id/mobile_imageview"
+				android:visibility="gone"
+				style="@style/register_imageview_style"
+				android:contentDescription="@string/imageview" />
+        </FrameLayout>
+	        
+        <!-- 登录密码 -->
+		<FrameLayout android:layout_width="fill_parent"
+		    android:layout_height="wrap_content">
+	        <LinearLayout
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_marginTop="15dp"
+	            android:orientation="horizontal" >	
+	            <LinearLayout
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:background="@drawable/edit_left"
+	                android:orientation="horizontal" >	
+	                <ImageView
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:layout_gravity="center"
+	                    android:contentDescription="@string/imageview"
+	                    android:src="@drawable/phone_icon" />
+	
+	                <TextView
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:text="@string/look_login_pwd"
+	                    style="@style/cancell_textview_style" />
+	            </LinearLayout>	
+	            <LinearLayout
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:background="@drawable/input_all_selector"
+	                android:orientation="horizontal"
+	                android:id="@+id/login_pwd_linearlayout" >
+	
+	                <EditText
+	                    android:id="@+id/login_pwd_edittext"
+	                    android:layout_width="190dp"
+	                    android:layout_height="wrap_content"
+	                    android:hint="@string/input_login_password"
+	                    android:password="true"
+	                    android:tag="4"
+	                    style="@style/cancell_edittext_style" />
+	            </LinearLayout>
+	        </LinearLayout>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+				android:id="@+id/login_pwd_imageview"
+				android:visibility="gone"
+				style="@style/register_imageview_style"
+				android:contentDescription="@string/imageview" />
+        </FrameLayout>
+        
+     
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:contentDescription="@string/imageview"
+                android:background="@drawable/urgent_icon" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:text="@string/please_in_the_network_environment_account"
+                android:textColor="@color/check_hint_color"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="40dp"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/confrim_cancell"
+                android:id="@+id/confrim_cancell_button"
+                style="@style/common_button_style" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
