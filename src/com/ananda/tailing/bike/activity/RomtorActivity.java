@@ -30,6 +30,7 @@ import com.ananda.tailing.bike.view.TitleBarView;
 import com.fu.baseframe.net.CallServer;
 import com.fu.baseframe.net.CustomDataRequest;
 import com.fu.baseframe.net.HttpListener;
+import com.google.zxing.client.android.CaptureActivity;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.xiaofu_yan.blux.blue_guard.BlueGuard;
 import com.yolanda.nohttp.Request;
@@ -107,7 +108,7 @@ public class RomtorActivity extends BaseActivity implements OnClickListener {
 
 	public static final int REQUEST_CONNECT_DEVICE = 1;
 	private static final int REQUEST_ENABLE_BT = 2;
-	
+	private static final int REQUEST_SCAN_IMEI = 33;
 	private TitleBarView titleBarView;
 	private TabBarView tabBarView;
 
@@ -567,8 +568,10 @@ public class RomtorActivity extends BaseActivity implements OnClickListener {
 		}
 		case R.id.button_car_cloud:
 			{
-				com.ananda.tailing.bike.activity.CloudSmartControlActivity_.intent(context).start();
-				
+//				com.ananda.tailing.bike.activity.CloudSmartControlActivity_.intent(context).start();
+				Intent captureIntent = new Intent(this,CaptureActivity.class);
+				captureIntent.putExtra("isFromCloud", true);
+				startActivityForResult(captureIntent, REQUEST_SCAN_IMEI);
 			}
 		}
 	}
@@ -654,7 +657,21 @@ public class RomtorActivity extends BaseActivity implements OnClickListener {
 		case REQUEST_ENABLE_BT: {
 			initActivity();
 			break;
+			
 		}
+		case REQUEST_SCAN_IMEI:
+			if(resultCode == RESULT_OK){
+				Bundle bundle = data.getExtras();
+				String result = bundle.getString("result");
+				//显示 (Bitmap) data.getParcelableExtra("bitmap")
+				if(TextUtils.isEmpty(result)|| result.length()!=15){
+					MyToast.showShortToast(this, "二维码格式错误");
+				}else{
+					PreferencesUtils.putString(this, "IMEI", result);
+					com.ananda.tailing.bike.activity.CloudSmartControlActivity_.intent(context).start();
+				}
+			}
+			break;
 		}
 	}
 	

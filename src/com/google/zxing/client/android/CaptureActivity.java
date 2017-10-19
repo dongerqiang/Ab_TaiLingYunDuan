@@ -15,11 +15,13 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.text.TextUtils;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 
 import com.ananda.tailing.bike.R;
+import com.ananda.tailing.bike.util.MyToast;
 import com.ananda.tailing.bike.view.TitleBarView;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
@@ -49,6 +51,8 @@ public class CaptureActivity extends Activity implements Callback {
 	private static final float BEEP_VOLUME = 0.10f;
 	private boolean vibrate;
 	private TitleBarView mTitleBarView;
+	//imei二维码扫描
+	private boolean isFromCloud = false;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -64,6 +68,12 @@ public class CaptureActivity extends Activity implements Callback {
 		
 		hasSurface = false;
 		inactivityTimer = new InactivityTimer(this);
+		
+		//判断是否来自云端扫描
+		Intent intent = getIntent();
+		if(intent!=null){
+			isFromCloud =intent.getBooleanExtra("isFromCloud", false);
+		}
 	}
 
 
@@ -117,14 +127,46 @@ public class CaptureActivity extends Activity implements Callback {
 		String resultString = result.getText();
 		Intent resultIntent = new Intent();
 		Bundle bundle = new Bundle();
-		bundle.putString("result", recode(resultString));
+		if(isFromCloud){
+			bundle.putString("result", recodeImei(resultString));
+		}else{
+			bundle.putString("result", recode(resultString));
+		}
+		
 		resultIntent.putExtras(bundle);
 		this.setResult(RESULT_OK, resultIntent);
 
 		finish();
 	}
 	
-	 private String recode(String str) {  
+	 private String recodeImei(String resultString) {
+		String imeiString = "";
+		 if (resultString.equals("")) {
+//			 MyToast.showShortToast(this, "台铃服务未启动!");
+	        } else {
+	            //扫描文本：www.qdigo.com/download.html?a=12345566,88888
+	            try {
+	                if(!TextUtils.isEmpty(resultString)){
+	                    if(resultString.contains("=")){
+	                        String[] str = resultString.split("=");
+	                        if(str.length>1){
+	                            String[] str1 = str[str.length-1].split(",");
+//	                            LogUtils.logDug("imei : "+str1[0].trim());
+	                            imeiString =(str1[0].trim());
+	                        }
+	                    }
+	                }
+	            } catch (Exception e) {
+	                e.printStackTrace();
+	            }
+
+
+	        }
+		return imeiString;
+	}
+
+
+	private String recode(String str) {  
 	        String formart = "";  
 	  
 	        try {  

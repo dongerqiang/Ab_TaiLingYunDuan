@@ -1,6 +1,8 @@
 package com.ananda.tailing.bike.activity.more;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.apache.http.entity.StringEntity;
 
@@ -25,7 +27,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.ananda.tailing.bike.R;
 import com.ananda.tailing.bike.activity.BaseActivity;
 import com.ananda.tailing.bike.activity.MoreActivity;
+import com.ananda.tailing.bike.activity.MyApplication;
 import com.ananda.tailing.bike.activity.RomtorActivity;
+import com.ananda.tailing.bike.data.CarInfoResponse;
+import com.ananda.tailing.bike.entity.CarInfo;
 import com.ananda.tailing.bike.util.CommonUtils;
 import com.ananda.tailing.bike.util.HttpAPI;
 import com.ananda.tailing.bike.util.HttpRestClient;
@@ -33,7 +38,13 @@ import com.ananda.tailing.bike.util.MyToast;
 import com.ananda.tailing.bike.util.PreferencesUtils;
 import com.ananda.tailing.bike.view.MyDialog;
 import com.ananda.tailing.bike.view.TitleBarView;
+import com.fu.baseframe.net.CallServer;
+import com.fu.baseframe.net.CustomDataRequest;
+import com.fu.baseframe.net.HttpListener;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.yolanda.nohttp.Request;
+import com.yolanda.nohttp.RequestMethod;
+import com.yolanda.nohttp.Response;
 
 /**
  * @package com.ananda.tailing.bike.activity.more
@@ -53,14 +64,14 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	private EditText etUserName, etPassword;
 		
 	/** 保持登录状态  */
-	private CheckBox checkPwd;
+//	private CheckBox checkPwd;
 	
 	private MyDialog myDialog;
 	
 	private String type;
 	private LinearLayout login_ll;
 	private LinearLayout login_ll2;
-	private Button login_cancellation_usernmae;
+	private Button login_cancellation_usernmae,codeButton;
 	private TextView edittext_user_name2;
 	
 	@Override
@@ -88,11 +99,11 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		layoutPassword = (LinearLayout) findViewById(R.id.password_layout);
 		etUserName = (EditText) findViewById(R.id.edittext_user_name);
 		etPassword = (EditText) findViewById(R.id.edittext_password);
-		
+		codeButton = (Button)findViewById(R.id.btn_yzm);
 		etUserName.addTextChangedListener(new EditTextWatcher(etUserName));
 		etPassword.addTextChangedListener(new EditTextWatcher(etPassword));
 		
-		checkPwd = (CheckBox) findViewById(R.id.checkbox_rember_password);
+//		checkPwd = (CheckBox) findViewById(R.id.checkbox_rember_password);
 		login_ll = (LinearLayout) findViewById(R.id.login_ll);
 		login_ll2 = (LinearLayout) findViewById(R.id.login_ll2);
 		login_cancellation_usernmae = (Button) findViewById(R.id.login_cancellation_usernmae);
@@ -116,13 +127,13 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 				PreferencesUtils.putString(LoginActivity.this, "UserId", ""); 
 				PreferencesUtils.putString(LoginActivity.this, "Password", "");
 				PreferencesUtils.putBoolean(LoginActivity.this, "isChecked",false);
-				checkPwd.setChecked(false);
+//				checkPwd.setChecked(false);
 				login_ll.setVisibility(View.VISIBLE);
 				login_ll2.setVisibility(View.GONE);
 			}
 		});
 		
-		checkPwd.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		/*checkPwd.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -135,7 +146,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 					PreferencesUtils.putBoolean(LoginActivity.this, "isChecked", isChecked);
 				}
 			}
-		});
+		});*/
 												
 	}
 
@@ -170,6 +181,10 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 			startActivity(intent);
 			break;
 		}
+		case R.id.btn_yzm:
+			getPinCode();
+			startTimer();
+			break;
 		}		
 	}	
 	
@@ -183,7 +198,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		} 
 		
 		if(TextUtils.isEmpty(etPassword.getText().toString())) { 
-			MyToast.showShortToast(LoginActivity.this, "请输入密码!");
+			MyToast.showShortToast(LoginActivity.this, "请输入验证码!");
 			return;
 		}
 		if (CommonUtils.isNetWorkNormal(this)) { 
@@ -389,5 +404,72 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 			LoginActivity.this.finish();
 		}
 	}
+	public Timer timer;
+	int time = 0;
+	public void startTimer(){
+		time = 60;
+		codeButton.setEnabled(false);
+		
+		if(timer != null){
+			timer.cancel();
+			timer = null;
+		}
+		
+		timer = new Timer();
+		timer.schedule(new TimerTask() {
+			
+			@Override
+			public void run() {
+				runOnUiThread(new Runnable() {
+					public void run() {
+						if(time < 0){
+							stopTimer();
+							return;
+						}
+						codeButton.setText((time--)+"s");
+					}
+				});
+			}
+		}, 0, 1000);
+	}
 	
+	public void stopTimer(){
+		codeButton.setEnabled(true);
+		codeButton.setText(R.string.pin_code);
+		if(timer != null){
+			timer.cancel();
+			timer = null;
+		}
+	}
+	
+	private void getPinCode() {
+		//todo
+		// TODO Auto-generated method stub
+		String strUrl = String.format("http://gps.qdigo.net:13080/bike/getBikeDetail/%s", MyApplication.DEVIDE_ID);
+		Request<CarInfoResponse> request = new CustomDataRequest<CarInfoResponse>(strUrl,RequestMethod.GET,CarInfoResponse.class);
+		request.setConnectTimeout(60 * 1000);
+		request.setReadTimeout(60 * 1000);
+		request.setHeader("context-Type", "application/json");
+		request.setHeader("mobileNo", "");
+		request.setHeader("mobiledeviceId", "");
+		request.setHeader("accesstoken",  "");
+		CallServer.getRequestInstance().add(this, strUrl.hashCode(), request, new HttpListener<CarInfoResponse>() {
+
+			@Override
+			public void onSucceed(int what, Response<CarInfoResponse> response) {
+				if(response.isSucceed() && response.get() != null){
+					if(response.get().data != null){
+					
+						
+					}
+				}
+			}
+
+			@Override
+			public void onFailed(int what, String url, Object tag, Exception exception, int responseCode,
+					long networkMillis) {
+//				MyApplication.DEVIDE_ID  = "";
+			}
+		},this,true);
+	}
 }

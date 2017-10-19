@@ -44,19 +44,23 @@ import com.ananda.tailing.bike.data.CarInfoResponse;
 import com.ananda.tailing.bike.data.PathInfo;
 import com.ananda.tailing.bike.data.PathResponse;
 import com.ananda.tailing.bike.entity.CarInfo;
+import com.ananda.tailing.bike.util.MyToast;
 import com.ananda.tailing.bike.util.PreferencesUtils;
 import com.ananda.tailing.bike.view.TitleBarView;
 import com.fu.baseframe.net.CallServer;
 import com.fu.baseframe.net.CustomDataRequest;
 import com.fu.baseframe.net.HttpListener;
+import com.google.zxing.client.android.CaptureActivity;
 import com.yolanda.nohttp.Request;
 import com.yolanda.nohttp.RequestMethod;
 import com.yolanda.nohttp.Response;
 
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler.Callback;
+import android.text.TextUtils;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
@@ -75,6 +79,7 @@ public class CloudSmartControlActivity extends BaseActivity implements LocationS
 	private AMapLocationClient mLocationClient = null;
 	//声明AMapLocationClientOption对象
 	private AMapLocationClientOption mLocationOption = null;
+	private final int REQUEST_SCAN_IMEI_CLOUD = 34;
 	AMap aMap;
 	protected Bundle savedInstanceState;
 	
@@ -112,19 +117,22 @@ public class CloudSmartControlActivity extends BaseActivity implements LocationS
 		initMap();
 		
 		MyApplication.DEVIDE_ID = PreferencesUtils.getString(this, "IMEI", "");
+		
 		if(MyApplication.DEVIDE_ID.isEmpty()){
 			bindIMEIClick.setText("绑定");
 			showInputDialog();
 		}else{
 			bindIMEIClick.setText("解绑");
 		}
-		
+		showImei(MyApplication.DEVIDE_ID);
 		
 	}
-	
+	public void showImei(String imei){
+		deviceIdTv.setText(MyApplication.DEVIDE_ID);
+	}
 	private void showInputDialog(){
 		
-		MyApplication.getInstance().dialogInputDeviceId(this,new Callback() {
+		/*MyApplication.getInstance().dialogInputDeviceId(this,new Callback() {
 			
 			@Override
 			public boolean handleMessage(Message msg) {
@@ -138,8 +146,10 @@ public class CloudSmartControlActivity extends BaseActivity implements LocationS
 				}
 				return false;
 			}
-		});
-		
+		});*/
+		Intent captureIntent = new Intent(this,CaptureActivity.class);
+		captureIntent.putExtra("isFromCloud", true);
+		startActivityForResult(captureIntent, REQUEST_SCAN_IMEI_CLOUD);
 	}
 	
 	@Click
@@ -473,5 +483,29 @@ public class CloudSmartControlActivity extends BaseActivity implements LocationS
 			}
 		},this,true);
 
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		switch (requestCode) {
+		case REQUEST_SCAN_IMEI_CLOUD :
+			if(resultCode == RESULT_OK){
+				Bundle bundle = data.getExtras();
+				String result = bundle.getString("result");
+				PreferencesUtils.putString(CloudSmartControlActivity.this, "IMEI", result);
+				MyApplication.DEVIDE_ID = result;
+				showImei(result);
+				//显示 (Bitmap) data.getParcelableExtra("bitmap")
+				if(TextUtils.isEmpty(result)|| result.length()!=15){
+					MyToast.showShortToast(this, "二维码格式错误,绑定失败,请重试!");
+					bindIMEIClick.setText("绑定");
+				}else{
+					getCarLocation();
+					bindIMEIClick.setText("解绑");
+				}
+			}
+			break;
+		}
 	}
 }
