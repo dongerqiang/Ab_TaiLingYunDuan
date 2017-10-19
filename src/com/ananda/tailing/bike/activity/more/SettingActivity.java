@@ -94,7 +94,7 @@ public class SettingActivity extends BaseActivity {
 			
 			@Override
 			public boolean onLongClick(View v) {
-				int result = SmartBikeInstance.setGuardDistance();
+				int result = SmartBikeInstance.getInstance().setGuardDistance();
 				String distance = "";
 				if(result == -1){
 					MyToast.showShortToast(SettingActivity.this, "设备未连接！");
@@ -268,10 +268,10 @@ public class SettingActivity extends BaseActivity {
 				// TODO Auto-generated method stub
 				if(CheckState) {
 					PreferencesUtils.putString(SettingActivity.this, "fortification", "0");
-					SmartBikeInstance.setAutoArm();
+					SmartBikeInstance.getInstance().setAutoArm();
 				} else {
 					PreferencesUtils.putString(SettingActivity.this, "fortification", "1");
-					SmartBikeInstance.setAutoArm();
+					SmartBikeInstance.getInstance().setAutoArm();
 				}
 			}
 		});
@@ -298,11 +298,11 @@ public class SettingActivity extends BaseActivity {
 				if (CheckState) {
 					PreferencesUtils
 							.putString(SettingActivity.this, "bike_voice_control", "1");
-					SmartBikeInstance.closeVoice(SettingActivity.this);
+					SmartBikeInstance.getInstance().closeVoice(SettingActivity.this);
 				} else {
 					PreferencesUtils
 							.putString(SettingActivity.this, "bike_voice_control", "0");
-					SmartBikeInstance.openVoice(SettingActivity.this);
+					SmartBikeInstance.getInstance().openVoice(SettingActivity.this);
 				}
 			}
 		});
@@ -419,7 +419,7 @@ public class SettingActivity extends BaseActivity {
 			
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
-				SmartBikeInstance.setSmartBikeArmConfigTrue();
+				SmartBikeInstance.getInstance().setSmartBikeArmConfigTrue();
 				if(vibration_level_1.getId() == checkedId){
 					PreferencesUtils.putString(SettingActivity.this, "vibration_level", "0");
 				}else if(vibration_level_2.getId() == checkedId){
@@ -431,7 +431,7 @@ public class SettingActivity extends BaseActivity {
 				}else if(vibration_level_5.getId() == checkedId){
 					PreferencesUtils.putString(SettingActivity.this, "vibration_level", "4");
 				}
-				SmartBikeInstance.setShockSensitivity();
+				SmartBikeInstance.getInstance().setShockSensitivity();
 			}
 		});
 		
@@ -452,7 +452,7 @@ public class SettingActivity extends BaseActivity {
 					PreferencesUtils.putString(SettingActivity.this, "control_type", "0");
 				}else if(control_type_hand_rb.getId() == checkedId){
 					PreferencesUtils.putString(SettingActivity.this, "control_type", "1");
-					SmartBikeInstance.closeDevice();
+					SmartBikeInstance.getInstance().closeDevice();
 				}
 			}
 		});

@@ -3,40 +3,17 @@ package com.ananda.tailing.bike.activity;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.http.entity.StringEntity;
-
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.bluetooth.BluetoothAdapter;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ananda.tailing.bike.R;
-import com.ananda.tailing.bike.activity.more.AlarmReceiver;
 import com.ananda.tailing.bike.activity.more.ArsReceiver;
-import com.ananda.tailing.bike.entity.DeviceInfo;
+import com.ananda.tailing.bike.data.BaseResponse;
 import com.ananda.tailing.bike.entity.RideReportInfo;
 import com.ananda.tailing.bike.smartbike.DeviceAdapter;
 import com.ananda.tailing.bike.smartbike.DeviceDB;
@@ -50,8 +27,45 @@ import com.ananda.tailing.bike.view.MyDialog;
 import com.ananda.tailing.bike.view.RideReportDialog;
 import com.ananda.tailing.bike.view.TabBarView;
 import com.ananda.tailing.bike.view.TitleBarView;
+import com.fu.baseframe.net.CallServer;
+import com.fu.baseframe.net.CustomDataRequest;
+import com.fu.baseframe.net.HttpListener;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.xiaofu_yan.blux.blue_guard.BlueGuard;
+import com.yolanda.nohttp.Request;
+import com.yolanda.nohttp.RequestMethod;
+import com.yolanda.nohttp.Response;
+
+import android.Manifest;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.bluetooth.BluetoothAdapter;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * @package com.ananda.tailing.bike.activity
@@ -69,20 +83,25 @@ public class RomtorActivity extends BaseActivity implements OnClickListener {
 	public static final String ARS_TAG = "com.ananda.tailing.bike.activity.RomtorActivity.ars";
 	public static final String START_STATUS_GET = "com.ananda.tailing.bike.activity.RomtorActivity.getstatus";
 	public static final String ALARM_TAG = "com.ananda.tailing.bike.activity.RomtorActivity.alarm";
+
+	public static final int WRITE_COARSE_LOCATION_REQUEST_CODE = 0x00012;
+	public static final int WRITE_FINE_LOCATION_REQUEST_CODE = 0x00013;
+	public static final int WRITE_EXTERNAL_STORAGE_CODE = 0x00014;
+	public static final int READ_EXTERNAL_STORAGE_CODE = 0x00015;
+	public static final int READ_PHONE_STATE_CODE = 0x00016;
 	
 	private Context context;
 	private String userId;
 	private MyDialog myDialog;
 	private Dialog dialog;
-	private List<DeviceInfo> mDevices = new ArrayList<DeviceInfo>();
-	private DeviceInfo currentDeviceInfo;
+	private DeviceDB.Record record;
 	private DeviceAdapter adapter;
 	private String mKey;
 	
 	private EditText mPassEditView;
 	
 	/** 上锁、解锁、寻车警报、打开座桶 */
-	private Button btnUnlocking, btnLocking, btnCarAlarm, btnOpenBarrel;
+	private Button btnUnlocking, btnLocking, btnCarAlarm, btnOpenBarrel,btnCloud;
 
 	private BluetoothAdapter btAdapt;
 
@@ -128,6 +147,21 @@ public class RomtorActivity extends BaseActivity implements OnClickListener {
 		}
 	};
 	
+	
+	/***
+	 * 新增代码
+	 * @create date 2016年9月8日 15:20:48
+	 * @author fwc
+	 */
+	OnClickListener carStatusOnClick = new OnClickListener() {
+		
+		@Override
+		public void onClick(View v) {
+			getCarState();
+		}
+	};
+	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -138,8 +172,52 @@ public class RomtorActivity extends BaseActivity implements OnClickListener {
 		startBluetooth();		
 		super.onCreate(savedInstanceState); 
 		resisterReceivers();
-
+		
+		myDialog = new MyDialog(this, dialogHandler);
+		reportDialog = new RideReportDialog(this, dialogHandler);
+		
+		adapter = new DeviceAdapter(context);
+		
+		if(!SmartBikeInstance.getInstance().isConnected()){
+			try{
+				SmartBikeInstance.getInstance().loadSmartBike();
+			}catch(Exception e){
+				MyToast.showShortToast(this, "台铃服务未启动!");
+			}
+			
+		}
+		
+		if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+	              != PackageManager.PERMISSION_GRANTED) {
+	          ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+	                  WRITE_COARSE_LOCATION_REQUEST_CODE);//自定义的code
+	    }
+		
+		if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+	              != PackageManager.PERMISSION_GRANTED) {
+	          ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+	        		  WRITE_FINE_LOCATION_REQUEST_CODE);//自定义的code
+	    }
+		
+		if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+	              != PackageManager.PERMISSION_GRANTED) {
+	          ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+	        		  WRITE_EXTERNAL_STORAGE_CODE);//自定义的code
+	    }
+		
+		if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+	              != PackageManager.PERMISSION_GRANTED) {
+	          ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+	        		  READ_EXTERNAL_STORAGE_CODE);//自定义的code
+	    }
+		
+		if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
+	              != PackageManager.PERMISSION_GRANTED) {
+	          ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE},
+	        		  READ_PHONE_STATE_CODE);//自定义的code
+	    }
 	}
+
 	
 	protected void resisterReceivers(){
 		IntentFilter speedFilter = new IntentFilter(MeterActivity.SPEED_TAG);
@@ -162,6 +240,8 @@ public class RomtorActivity extends BaseActivity implements OnClickListener {
 			
 	}
 	
+	
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -175,10 +255,14 @@ public class RomtorActivity extends BaseActivity implements OnClickListener {
 		tabBarView = (TabBarView) findViewById(R.id.tab_bar);
 		tabBarView.setIndex(0);
 
+		findViewById(R.id.selfCarCheckImg).setOnClickListener(carStatusOnClick);
+		
 		btnUnlocking = (Button) findViewById(R.id.button_unlocking);
 		btnLocking = (Button) findViewById(R.id.button_locking);
 		btnCarAlarm = (Button) findViewById(R.id.button_car_alarm);
 		btnOpenBarrel = (Button) findViewById(R.id.button_open_barrel_ride);
+		btnCloud = (Button) findViewById(R.id.button_car_cloud);
+		btnCloud.setOnClickListener(this);
 		
 		bluetoothSearch = (ImageView) findViewById(R.id.imageview_bluetooth_search);
 		bluetoothSearch.setOnClickListener(new OnClickListener() {
@@ -192,7 +276,12 @@ public class RomtorActivity extends BaseActivity implements OnClickListener {
 					if (btAdapt.isEnabled()) {
 //						if (isLogin()) {
 							System.out.println("搜索蓝牙设备...");
-							SmartBikeInstance.clickBluetooth();
+							adapter.reset();
+							if(!SmartBikeInstance.getInstance().clickBluetooth()){
+								SmartBikeInstance.getInstance().loadSmartBike();
+								MyToast.showShortToast(RomtorActivity.this, "正在启动蓝牙服务。。。。");
+								return;
+							}
 							showDeviceDialog();
 //						} else {
 //							myDialog.show();
@@ -207,7 +296,7 @@ public class RomtorActivity extends BaseActivity implements OnClickListener {
 			}
 		});
 
-		if(SmartBikeInstance.getSmartBike() == null || (SmartBikeInstance.getSmartBike().state() != BlueGuard.State.STARTED && SmartBikeInstance.getSmartBike().state() != BlueGuard.State.RUNNING)){
+		if(SmartBikeInstance.getInstance().getSmartBike() == null || (SmartBikeInstance.getInstance().getSmartBike().state() != BlueGuard.State.STARTED && SmartBikeInstance.getInstance().getSmartBike().state() != BlueGuard.State.RUNNING)){
 			initClickListener(false);
 		}else{
 			initClickListener(true);
@@ -268,9 +357,9 @@ public class RomtorActivity extends BaseActivity implements OnClickListener {
 				btnCarAlarm.setOnClickListener(this);
 			}
 			// 鞍座开启
-			if (PreferencesUtils.getString(this, "saddles", "0").equals("0")) {
+			//if (PreferencesUtils.getString(this, "saddles", "0").equals("0")) {
 				btnOpenBarrel.setOnClickListener(this);
-			}
+			//}
 
 			// 超负荷监测
 			if (PreferencesUtils.getString(this, "overload", "0").equals("0")) {
@@ -388,24 +477,32 @@ public class RomtorActivity extends BaseActivity implements OnClickListener {
 				.getSystemService(LAYOUT_INFLATER_SERVICE);
 		View view = inflater.inflate(R.layout.device_list2, null);
 		ListView paired_devices = (ListView) view.findViewById(R.id.paired_devices);
-		adapter = new DeviceAdapter(context, mDevices);
 		paired_devices.setAdapter(adapter);
 		dialog = new Dialog(this, R.style.dialog);
 		dialog.setContentView(view);
 		dialog.show();
-		paired_devices.setOnItemClickListener(new OnItemClickListener() {
+		paired_devices.setOnItemClickListener(new OnItemClickListener() { 
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 
-				SmartBikeInstance.stopScan();
-				SmartBikeInstance.clearDevice();
-				currentDeviceInfo = mDevices.get(position);
-				SmartBikeInstance.scanFlag = true;
-				SmartBikeInstance.getDevice(currentDeviceInfo.getIdentifier());
+				SmartBikeInstance.getInstance().stopScan();
+				SmartBikeInstance.getInstance().clearDevice();
+				record = adapter.getClickItem(position);
+				SmartBikeInstance.getInstance().getDevice(record.identifier);
 				dialog.dismiss();
 
+			}
+		});
+		
+		dialog.setOnCancelListener(new OnCancelListener() {
+			
+			@Override
+			public void onCancel(DialogInterface dialog) {
+				SmartBikeInstance.getInstance().stopScan();
+				SmartBikeInstance.getInstance().clearDevice();
+				dialog.dismiss();
 			}
 		});
 	}
@@ -423,12 +520,12 @@ public class RomtorActivity extends BaseActivity implements OnClickListener {
 		case R.id.button_unlocking: {
 			if(isLogin()){
 				if(!isRunning()){
-					SmartBikeInstance.setState(BlueGuard.State.ARMED);
+					SmartBikeInstance.getInstance().setState(BlueGuard.State.ARMED);
 					setReportInfo();
 					if(PreferencesUtils.getString(this, "ride", "0").equals("0")){
 						reportDialog.show();
 					}
-					SmartBikeInstance.clearSpeedList();
+					SmartBikeInstance.getInstance().clearSpeedList();
 				}else{
 					MyToast.showShortToast(this, "行驶中，无法使用遥控功能!");
 				}
@@ -439,7 +536,7 @@ public class RomtorActivity extends BaseActivity implements OnClickListener {
 		case R.id.button_locking: {
 			if(isLogin()){
 				if(!isRunning()){
-				SmartBikeInstance.setState(BlueGuard.State.STOPPED);
+				SmartBikeInstance.getInstance().setState(BlueGuard.State.STOPPED);
 				}else{
 					MyToast.showShortToast(this, "行驶中，无法使用遥控功能!");
 				}
@@ -450,7 +547,7 @@ public class RomtorActivity extends BaseActivity implements OnClickListener {
 		case R.id.button_car_alarm: {
 			if(isLogin()){
 				if(!isRunning()){
-				SmartBikeInstance.playSound(BlueGuard.Sound.FIND);
+				SmartBikeInstance.getInstance().playSound(BlueGuard.Sound.FIND);
 				}else{
 					MyToast.showShortToast(this, "行驶中，无法使用遥控功能!");
 				}
@@ -461,18 +558,23 @@ public class RomtorActivity extends BaseActivity implements OnClickListener {
 		case R.id.button_open_barrel_ride: {
 			if(isLogin()){
 				if(!isRunning()){
-				SmartBikeInstance.openTrunk();
+				SmartBikeInstance.getInstance().openTrunk();
 				}else{
 					MyToast.showShortToast(this, "行驶中，无法使用遥控功能!");
 				}
 			}
 			break;
 		}
+		case R.id.button_car_cloud:
+			{
+				com.ananda.tailing.bike.activity.CloudSmartControlActivity_.intent(context).start();
+				
+			}
 		}
 	}
 	
 	protected boolean isRunning(){
-		if((SmartBikeInstance.getState() == BlueGuard.State.RUNNING) || (SmartBikeInstance.getState() == BlueGuard.State.STARTED)){
+		if((SmartBikeInstance.getInstance().getState() == BlueGuard.State.RUNNING) || (SmartBikeInstance.getInstance().getState() == BlueGuard.State.STARTED)){
 			return true;
 		}else{
 			return false;
@@ -481,7 +583,7 @@ public class RomtorActivity extends BaseActivity implements OnClickListener {
 
 	protected void setReportInfo(){
 		float maxSpeed = 0;
-		speedList = SmartBikeInstance.getSpeedList();
+		speedList = SmartBikeInstance.getInstance().getSpeedList();
 		if(speedList.size() == 0){
 			return;
 		}
@@ -523,8 +625,8 @@ public class RomtorActivity extends BaseActivity implements OnClickListener {
 
 	@Override
 	protected void onResume() {
-		SmartBikeInstance.scanFlag = false;
 		super.onResume();
+		SmartBikeInstance.getInstance().connect(this);
 	}
 	
 	public void onBackPressed() {
@@ -532,13 +634,14 @@ public class RomtorActivity extends BaseActivity implements OnClickListener {
 	}
 	
 	protected boolean isLogin(){
-		String phoneControl = PreferencesUtils.getString(context, "control_type");
-		if(phoneControl != null && "1".equals(phoneControl)){
-			MyToast.showShortToast(this, "正在使用手柄控制!");
-			return false;
-		}
+		return true;
+//		String phoneControl = PreferencesUtils.getString(context, "control_type");
+//		if(phoneControl != null && "1".equals(phoneControl)){
+//			MyToast.showShortToast(this, "正在使用手柄控制!");
+//			return false;
+//		}
 //		if(!TextUtils.isEmpty(userId) && !userId.equals("0")){
-			return true;
+			//return true;
 //		}else{
 //			return false;
 //		}
@@ -560,48 +663,51 @@ public class RomtorActivity extends BaseActivity implements OnClickListener {
 		if(phoneControl != null && "1".equals(phoneControl)){
 			return;
 		}
-		currentDeviceInfo = DeviceDB.loadUsed(context);
+		record = DeviceDB.load(context);
 		userId = PreferencesUtils.getString(this, "UserId");
-		myDialog = new MyDialog(this, dialogHandler);
-		reportDialog = new RideReportDialog(this, dialogHandler);
-		
-		if(!SmartBikeInstance.isConnected()){
-			try{
-				SmartBikeInstance.loadSmartBike();
-			}catch(Exception e){
-				MyToast.showShortToast(this, "台铃服务未启动!");
-			}
-			
-		}
 		
 	}
+	
 	
 	/**
 	 * 检测是否打开蓝牙
 	 */
 	private void startBluetooth() {
 		// 如果本程序启动时蓝牙没有打开，要求它启用。
-		if (!btAdapt.isEnabled()) {
-			Intent enableIntent = new Intent(
-					BluetoothAdapter.ACTION_REQUEST_ENABLE);
-			startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-		}else{
-			initActivity();
+		
+		if(btAdapt == null){
+			//btAdapt = BluetoothAdapter.getDefaultAdapter();
+			MyToast.showShortToast(this, "没有发现蓝牙设备，请检查手机蓝牙工作是正常!");
+			return;
 		}
+		if(btAdapt != null){
+			if (!btAdapt.isEnabled()) {
+				Intent enableIntent = new Intent(
+						BluetoothAdapter.ACTION_REQUEST_ENABLE);
+				startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+			}else{
+				initActivity();
+			}
+		}
+		
 	}
 
 	public class DeviceReceiver extends BroadcastReceiver {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
+			Log.d("scan_device", action);
+			
 			if (action.equals(DEVICE_TAG)) {
 				String identifier = intent.getStringExtra("device_identifier");
 				String name = intent.getStringExtra("device_name");
-				DeviceInfo deviceInfo = new DeviceInfo();
-				deviceInfo.setIdentifier(identifier);
-				deviceInfo.setName(name);
-				mDevices.add(deviceInfo);
-				adapter.notifyDataSetChanged();
+				if(identifier != null && name != null){
+					Log.d("scan_device", name+":"+identifier);
+					DeviceDB.Record rec = new DeviceDB.Record(name, identifier, null);
+					adapter.addDevice(rec);
+					adapter.notifyDataSetChanged();
+				}
+			
 			}
 		}
 	}
@@ -626,20 +732,20 @@ public class RomtorActivity extends BaseActivity implements OnClickListener {
 //				if(speedKmFloat != 0){
 //					initClickListener(true);
 //				}else{
-//					initClickListener(false);
+//					initClickListener(false);   
 //				}
 			}
 		}
 	}
 	
 	protected void pairDevice(){
-		DeviceInfo deviceInfo = DeviceDB.load(context,currentDeviceInfo.getIdentifier());
+		DeviceDB.Record deviceInfo = DeviceDB.load(context);
 		if(deviceInfo != null){
-			mKey = deviceInfo.getKey();
+			mKey = deviceInfo.key;
 		}
 		System.out.println("---------------------currentKey:" + mKey);
 //		if(mKey != null) {
-//			SmartBikeInstance.connectByKey(mKey);
+//			SmartBikeInstance.getInstance().connectByKey(mKey);
 //		}
 //		else {
 			LayoutInflater inflater = (LayoutInflater) RomtorActivity.this.getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -653,15 +759,69 @@ public class RomtorActivity extends BaseActivity implements OnClickListener {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					String password = RomtorActivity.this.mPassEditView.getText().toString();
-					if(!SmartBikeInstance.pairDevice(password)){
+					if(TextUtils.isEmpty(password)){
 						myDialog.show();
 						myDialog.setTextInfo("密码不能为空！");
+						return;
 					}
+					SmartBikeInstance.getInstance().pairDevice(password);
 				}
 			});
 			builder.show();
 //		}
 	}
 	
+	private void carSelfCheckDialog(String msg){
+		final Dialog dialog = new Dialog(this,R.style.custom_dialog);
+		dialog.setContentView(View.inflate(this, R.layout.dialog_error_check_layout, null));
+		dialog.setCancelable(true);
+		dialog.setCanceledOnTouchOutside(true);
+		dialog.findViewById(R.id.rl).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+			}
+		});
+		TextView tv = (TextView) dialog.findViewById(R.id.errorMsgTv);
+		tv.setText(msg);
+		dialog.show();
+	}
+	
+	
+	private void getCarState(){
+		String strUrl = String.format("http://gps.qdigo.net:13080/ops/faultDetect/%s",MyApplication.DEVIDE_ID);
+		Request<BaseResponse> request = new CustomDataRequest<BaseResponse>(strUrl,RequestMethod.POST,BaseResponse.class);
+		request.setConnectTimeout(60 * 1000);
+		request.setReadTimeout(60 * 1000);
+		request.setHeader("context-Type", "application/json");
+		request.setHeader("mobileNo", "");
+		request.setHeader("mobiledeviceId", "");
+		request.setHeader("accesstoken",  "");
+		Map<String,String> params = new HashMap<String, String>();
+		params.put("imeiIdOrDeviceId", MyApplication.DEVIDE_ID);
+		request.add(params);
+		
+		CallServer.getRequestInstance().add(this, strUrl.hashCode(), request, new HttpListener<BaseResponse>() {
+
+			@Override
+			public void onSucceed(int what, Response<BaseResponse> response) {
+				if(response.isSucceed() && response.get() != null){
+					if(response.get().statusCode == 200){
+						Toast.makeText(RomtorActivity.this, "设备良好！", Toast.LENGTH_SHORT).show();
+					}else{
+						Toast.makeText(RomtorActivity.this, response.get().message, Toast.LENGTH_SHORT).show();
+					}
+				}
+			}
+
+			@Override
+			public void onFailed(int what, String url, Object tag, Exception exception, int responseCode,
+					long networkMillis) {
+				// TODO Auto-generated method stub
+				
+			}
+		},this,true);
+	}
 	
 }

@@ -6,16 +6,10 @@ import java.util.List;
 
 import org.apache.http.entity.StringEntity;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.widget.Toast;
-
 import com.alibaba.fastjson.JSONObject;
 import com.ananda.tailing.bike.activity.MeterActivity;
 import com.ananda.tailing.bike.activity.MyApplication;
 import com.ananda.tailing.bike.activity.RomtorActivity;
-import com.ananda.tailing.bike.entity.DeviceInfo;
 import com.ananda.tailing.bike.util.CommonUtils;
 import com.ananda.tailing.bike.util.HttpAPI;
 import com.ananda.tailing.bike.util.HttpRestClient;
@@ -30,46 +24,69 @@ import com.xiaofu_yan.blux.smart_bike.SmartBike;
 import com.xiaofu_yan.blux.smart_bike.SmartBikeManager;
 import com.xiaofu_yan.blux.smart_bike.SmartBikeServerConnection;
 
-public class SmartBikeInstance extends Activity{
-	private static State currentState;
-	private static int currentGear = -1;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.text.TextUtils;
+import android.view.TextureView;
+import android.widget.Toast;
 
-	private static SmartBikeServerConnection mConnection;
-	private static SmartBikeManager mSmartBikeManager;
-	private static SmartBike mSmartBike;
-	private static DeviceInfo localDeviceInfo;
-	public static boolean scanFlag = false;
-	public static State state;
-	private static List<Float> speedList = new ArrayList<Float>();
-	
-	public static void loadSmartBike(){
-		PreferencesUtils.putInt(MyApplication.getInstance(), "energy", 0);
-		localDeviceInfo = DeviceDB.loadUsed(MyApplication.getInstance());
-		mConnection = new SmartBikeServerConnection();
-		mConnection.delegate = new ServerConnectionDelegate();
-		mConnection.connect(MyApplication.getInstance());
+public class SmartBikeInstance{
+	private  State currentState;
+	private  int currentGear = -1;
+
+	private  SmartBikeServerConnection mConnection;
+	private  SmartBikeManager mSmartBikeManager;
+	private  SmartBike mSmartBike;
+	private  DeviceDB.Record record;
+	private Activity activity;
+	public  State state;
+	private  List<Float> speedList = new ArrayList<Float>();
+	private static SmartBikeInstance instance;
+	public static SmartBikeInstance getInstance(){
+		return instance == null ? instance = new SmartBikeInstance() : instance;
 	}
 	
-	public static void playSound(BlueGuard.Sound sound){
+	private SmartBikeInstance(){
+		
+	}
+	
+	public void loadSmartBike(){
+		instance = this;
+		PreferencesUtils.putInt(MyApplication.getInstance(), "energy", 0);
+		record = DeviceDB.load(MyApplication.getInstance());
+		mConnection = new SmartBikeServerConnection();
+		mConnection.delegate = new ServerConnectionDelegate();
+		
+	}
+	
+	public void connect(Activity activity){
+		this.activity = activity;
+		if(mSmartBikeManager == null){
+			mConnection.connect(activity);
+		}
+	}
+	
+	public  void playSound(BlueGuard.Sound sound){
 		if(mSmartBike != null){
 			mSmartBike.playSound(sound);
 		}
 	}
 	
-	public static int getDis(){
+	public  int getDis(){
 		if(mSmartBike != null){
 			return mSmartBike.currentRangePercent();
 		}
 		return 1000;
 	}
 	
-	public static void openTrunk(){
+	public  void openTrunk(){
 		if(mSmartBike != null){
 			mSmartBike.openTrunk();
 		}
 	}
 	
-	public static State getState(){
+	public  State getState(){
 		State result = null;
 		if(mSmartBike != null){
 			result = mSmartBike.state();
@@ -77,7 +94,7 @@ public class SmartBikeInstance extends Activity{
 		return result;
 	}
 	
-	public static int setGuardDistance(){
+	public  int setGuardDistance(){
 		if(mSmartBike != null){
 			int persent = mSmartBike.currentRangePercent();
 			mSmartBike.setAutoArmRangePercent(persent);
@@ -86,21 +103,25 @@ public class SmartBikeInstance extends Activity{
 		return -1;
 	}
 	
-	public static void clickBluetooth(){
+	public  boolean clickBluetooth(){
+		if(mSmartBikeManager == null){
+			return false;
+		}
 		mSmartBikeManager.scanSmartBike();
+		return true;
 	}
 	
-	public static void getDevice(String identifier){
+	public  void getDevice(String identifier){
 		mSmartBikeManager.getDevice(identifier);
 	}
 	
-	public static void setState(BlueGuard.State state){
+	public  void setState(BlueGuard.State state){
 		if(mSmartBike != null){
 			mSmartBike.setState(state);
 		}
 	}
 	
-	public static boolean pairDevice(String password){
+	public  boolean pairDevice(String password){
 		if(password != null && password != ""){
 			mSmartBike.pair(Integer.decode(password));
 		}else{
@@ -109,24 +130,24 @@ public class SmartBikeInstance extends Activity{
 		return true;
 	}
 	
-	public static void connectByKey(String key){
+	public  void connectByKey(String key){
 		mSmartBike.setConnectionKey(key);
 		mSmartBike.connect();
 	}
 	
-	public static SmartBike getSmartBike(){
+	public  SmartBike getSmartBike(){
 		return mSmartBike;
 	}
 	
-	public static List<Float> getSpeedList(){
+	public  List<Float> getSpeedList(){
 		return speedList;
 	}
 	
-	public static void clearSpeedList(){
+	public  void clearSpeedList(){
 		speedList.clear();
 	}
 	
-	public static boolean isConnected(){
+	public  boolean isConnected(){
 		if(mSmartBike == null || !mSmartBike.connected()){
 			return false;
 		}else{
@@ -134,7 +155,7 @@ public class SmartBikeInstance extends Activity{
 		}
 	}
 	
-	public static void setGuardDiatance(){
+	public  void setGuardDiatance(){
 		String type = PreferencesUtils.getString(MyApplication.getInstance(), "distance_level");
 		if(mSmartBike == null){
 			return;
@@ -147,7 +168,7 @@ public class SmartBikeInstance extends Activity{
 		}
 	}
 	
-	public static void setAutoArm(){
+	public  void setAutoArm(){
 		if(!isConnected()){
 			return;
 		}
@@ -160,7 +181,7 @@ public class SmartBikeInstance extends Activity{
 		}
 	}
 	
-	public static void initAlarmVoice(){
+	public  void initAlarmVoice(){
 		if(!isConnected()){
 			return;
 		}
@@ -171,24 +192,24 @@ public class SmartBikeInstance extends Activity{
 		}
 	}
 	
-	public static void stopScan(){
+	public  void stopScan(){
 		mSmartBikeManager.stopScan();
 	}
 	
-	public static void closeDevice(){
+	public  void closeDevice(){
 		if(mSmartBike != null){
 			mSmartBike.cancelConnect();
 		}
 		BluxSsServer.sharedInstance().stop();
 	}
 	
-	public static void clearDevice(){
+	public  void clearDevice(){
 		if(mSmartBike != null){
 			mSmartBike.cancelConnect();
 		}
 	}
 
-	public static void closeVoice(Context context){
+	public  void closeVoice(Context context){
 		if(mSmartBike != null){
 			mSmartBike.setAlarmConfig(false, true);
 		}else{
@@ -196,7 +217,7 @@ public class SmartBikeInstance extends Activity{
 		}
 	}
 
-	public static void openVoice(Context context){
+	public  void openVoice(Context context){
 		if(mSmartBike != null){
 			mSmartBike.setAlarmConfig(true, true);
 		}else{
@@ -204,13 +225,13 @@ public class SmartBikeInstance extends Activity{
 		}
 	}
 	
-	public static void setSmartBikeArmConfigTrue(){
+	public  void setSmartBikeArmConfigTrue(){
 		if(mSmartBike != null){
 			mSmartBike.setAlarmConfig(true, true);
 		}
 	}
 	
-	public static void setShockSensitivity(){
+	public  void setShockSensitivity(){
 		if(!isConnected()){
 			return;
 		}
@@ -218,7 +239,7 @@ public class SmartBikeInstance extends Activity{
 		mSmartBike.setShockSensitivity(Integer.valueOf(vibrationLevel));
 	}
 	
-	public static boolean arsAlarm(Integer i){
+	public  boolean arsAlarm(Integer i){
 		for(Integer arsInt : RomtorActivity.arsList){
 			if(arsInt == i){
 				return false;
@@ -227,14 +248,15 @@ public class SmartBikeInstance extends Activity{
 		return true;
 	}
 	
-	private static class ServerConnectionDelegate extends SmartBikeServerConnection.Delegate {
+	private  class ServerConnectionDelegate extends SmartBikeServerConnection.Delegate {
 		@Override
 		public void smartBikeServerConnected(SmartBikeManager smartBikeManager) {
 			System.out.println("server connected......");
 			mSmartBikeManager = smartBikeManager;
 			mSmartBikeManager.delegate = new SmartBikeManagerDelegate();
-			if(localDeviceInfo != null){
-				mSmartBikeManager.getDevice(localDeviceInfo.getIdentifier());
+			mSmartBikeManager.setContext(activity);
+			if(record != null){
+				mSmartBikeManager.getDevice(record.identifier);
 			}
 			
 		}
@@ -245,16 +267,19 @@ public class SmartBikeInstance extends Activity{
 	}
 	
 	// SmartGuardManager.Delegate
-	private static class SmartBikeManagerDelegate extends SmartBikeManager.Delegate {
+	private  class SmartBikeManagerDelegate extends SmartBikeManager.Delegate {
+		
 				@Override
-				public void smartBikeManagerFoundSmartBike(String identifier, String name) {
-					System.out.println("smartBikeManagerFoundSmartBike,identifier:" + identifier);
-					Intent intent = new Intent();
-					intent.setAction(RomtorActivity.DEVICE_TAG);
-					intent.putExtra("device_identifier", identifier);
-					intent.putExtra("device_name", name);
-					MyApplication.getInstance().sendBroadcast(intent);
+				public void smartBikeManagerFoundSmartBike(String identifier, String name, int nMode) {
+							System.out.println("smartBikeManagerFoundSmartBike,identifier:" + identifier);
+							Intent intent = new Intent();
+							intent.setAction(RomtorActivity.DEVICE_TAG);
+							intent.putExtra("device_identifier", identifier);
+							intent.putExtra("device_name", name);
+							MyApplication.getInstance().sendBroadcast(intent);
 				}
+				
+				
 
 				@Override
 				public void smartBikeManagerGotSmartBike(SmartBike smartBike) {
@@ -263,14 +288,18 @@ public class SmartBikeInstance extends Activity{
 					mSmartBike.setAlarmConfig(true, true);
 					mSmartBike.delegate = new BlueGuardDelegate();
 					
-					if(!scanFlag){
-						if(localDeviceInfo != null){
-							mSmartBike.setConnectionKey(localDeviceInfo.getKey());
+					if(!mSmartBikeManager.isScanning()){
+						if(record != null && !TextUtils.isEmpty(record.key)){
+							mSmartBike.setConnectionKey(record.key);
 							mSmartBike.connect();
+						}else{
+							Intent intent = new Intent();
+							intent.setAction(RomtorActivity.PAIR_TAG);
+							MyApplication.getInstance().sendBroadcast(intent);
 						}
 					}else{
-//						String userLocalKey = PreferencesUtils.getString(MyApplication.getInstance(), "UserKey");
-//						if(userLocalKey != null && !userLocalKey.trim().isEmpty()){
+						String userLocalKey = PreferencesUtils.getString(MyApplication.getInstance(), "UserKey");
+						if(userLocalKey != null && !userLocalKey.trim().isEmpty()){
 //							DeviceInfo deviceInfo = DeviceDB.load(MyApplication.getInstance(), mSmartBike.identifier());
 //							if(deviceInfo == null){
 //								deviceInfo = new DeviceInfo();
@@ -284,20 +313,21 @@ public class SmartBikeInstance extends Activity{
 //							DeviceDB.save(MyApplication.getInstance(), deviceInfo);
 //							mSmartBike.setConnectionKey(userLocalKey);
 //							mSmartBike.connect();
-//						}else{
+						}else{
 							Intent intent = new Intent();
 							intent.setAction(RomtorActivity.PAIR_TAG);
 							MyApplication.getInstance().sendBroadcast(intent);
-//						}
+						}
 					}
 				}
 			}
 			// BlueGuard delegate
-			private static class BlueGuardDelegate extends SmartBike.Delegate {
+			private  class BlueGuardDelegate extends SmartBike.Delegate {
 				@Override
 				public void blueGuardConnected(BlueGuard blueGuard) {
 					Toast.makeText(MyApplication.getInstance(),"连接成功！", Toast.LENGTH_SHORT)
 							.show();
+					mSmartBike.getAccountManager(); //
 					setAutoArm();
 					setShockSensitivity();
 					setGuardDiatance();
@@ -318,12 +348,11 @@ public class SmartBikeInstance extends Activity{
 						MyApplication.getInstance().sendBroadcast(intent);
 					}else if(result == PairResult.SUCCESS){
 						System.out.println("PairResult.SUCCESS");
-						DeviceInfo deviceInfo = new DeviceInfo();
-						deviceInfo.setIdentifier(blueGuard.identifier());
-						deviceInfo.setKey(key);
-						deviceInfo.setName(blueGuard.name());
-						DeviceDB.save(MyApplication.getInstance(), deviceInfo);
-						DeviceDB.saveUsed(MyApplication.getInstance(), deviceInfo);
+						
+						DeviceDB.Record rec = new DeviceDB.Record(blueGuard.name(), blueGuard.identifier(), key);
+				
+						DeviceDB.save(MyApplication.getInstance(), rec);
+						//DeviceDB.saveUsed(MyApplication.getInstance(), rec);
 						uploadDeviceKey(key);
 					}
 					
@@ -405,7 +434,7 @@ public class SmartBikeInstance extends Activity{
 			}
 	
 
-			private static void uploadDeviceKey(String key){
+			private  void uploadDeviceKey(String key){
 				try {
 					JSONObject jsonLogin = new JSONObject();
 					jsonLogin.put("Name", PreferencesUtils.getString(MyApplication.getInstance(), "UserName"));

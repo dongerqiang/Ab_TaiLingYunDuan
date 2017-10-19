@@ -285,7 +285,7 @@
 			        <com.ananda.tailing.bike.view.MyListView 
 			            android:layout_width="fill_parent"
 			            android:layout_height="fill_parent"
-						android:id="@+id/mixed_ars_listview"				
+						android:id="@id/mixed_ars_listview"				
 			            style="@style/ars_listview_style" />
 			        <include android:id="@+id/empty_layout_mixed"
 			            android:layout_width="wrap_content"

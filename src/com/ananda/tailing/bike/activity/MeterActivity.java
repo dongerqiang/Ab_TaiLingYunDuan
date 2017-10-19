@@ -91,7 +91,7 @@ public class MeterActivity extends BaseActivity {
 
 		// 先判断用户是否已登录
 //		if (!TextUtils.isEmpty(userId) && !userId.equals("0")) {
-			if(!SmartBikeInstance.isConnected()){
+			if(!SmartBikeInstance.getInstance().isConnected()){
 				myDialog.show();
 				myDialog.setTextInfo("未连接蓝牙设备！");
 			}else{

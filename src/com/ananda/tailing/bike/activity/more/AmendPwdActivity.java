@@ -82,6 +82,10 @@ public class AmendPwdActivity extends BaseActivity implements OnClickListener{
 		myDialog = new MyDialog(this, handler);
 		
 		btAdapt = BluetoothAdapter.getDefaultAdapter();
+		if(btAdapt == null){
+			MyToast.showShortToast(this, "没有发现蓝牙设备，请检查手机蓝牙工作是正常!");
+			return;
+		}
 		if (!btAdapt.isEnabled()) {
 			Intent enableIntent = new Intent(
 					BluetoothAdapter.ACTION_REQUEST_ENABLE);

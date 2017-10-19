@@ -61,7 +61,7 @@ public class CommonUtils {
 					public void onClick(DialogInterface arg0, int arg1) {
 						atx.finish();
 						finishActivity();// 关闭所有其他activity
-						SmartBikeInstance.closeDevice();
+						SmartBikeInstance.getInstance().closeDevice();
 						System.exit(0);
 					}
 				}).setPositiveButton("取消", null).create().show();

@@ -194,9 +194,16 @@ public class LookForPwdActivity extends BaseActivity implements OnClickListener 
 							}
 						}, 1000);
 					} else {
-						String message = jsonInfo.getString("Message");
-						myDialog.show();
-						myDialog.setTextInfo(message);
+						if(null == jsonInfo){
+							myDialog.setTextInfo("服务器错误。。。");
+							myDialog.show();
+						}else{
+							String message = jsonInfo.getString("Message");
+							myDialog.setTextInfo(message);
+							myDialog.show();
+							
+						}
+						
 					}	
 				}
 
@@ -378,7 +385,6 @@ public class LookForPwdActivity extends BaseActivity implements OnClickListener 
 			super.dispatchMessage(msg);
 			if(myDialog != null) {
 				myDialog.dismiss();
-				myDialog = null;
 			}
 		}
 		

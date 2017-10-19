@@ -1,6 +1,7 @@
 package com.ananda.tailing.bike.view;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -99,6 +100,18 @@ public class TitleBarView extends LinearLayout {
 	public void setTitle(int stringID) {
 		tvTitle.setVisibility(View.VISIBLE);
 		tvTitle.setText(stringID);
+	}
+	
+	public void setTitleLeftImg(int imgRes,String title){
+		tvTitle.setVisibility(View.VISIBLE);
+		Drawable left = getResources().getDrawable(imgRes);
+		left.setBounds(0, 0, left.getMinimumWidth(), left.getMinimumHeight());
+		tvTitle.setCompoundDrawables(left, null,null, null);
+		tvTitle.setText(title);
+	}
+	
+	public void setTitleClick(OnClickListener clickListener){
+		tvTitle.setOnClickListener(clickListener);
 	}
 
 }

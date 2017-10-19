@@ -27,16 +27,13 @@ public class MyDialog extends Dialog {
 	public MyDialog(Context context, Handler handler) { 
 		super(context, R.style.MyDialogStyle);
 		this.handler = handler;
-		// TODO Auto-generated constructor stub
+		setContentView(R.layout.my_dialog);
+		tvMes = (TextView) findViewById(R.id.message_textview);
 	}
 
 	@Override
 	public void show() {
-		// TODO Auto-generated method stub
-		super.show();
-		setContentView(R.layout.my_dialog);
-		tvMes = (TextView) findViewById(R.id.message_textview);
-		
+	
 		new Thread(new Runnable() {
 			
 			@Override
@@ -54,6 +51,8 @@ public class MyDialog extends Dialog {
 		
 		// 设置点击其他地方不能关闭
 		this.setCanceledOnTouchOutside(true);
+		
+		super.show();
 	}
 	
 	/**
