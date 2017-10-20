@@ -10,6 +10,7 @@ import org.androidannotations.annotations.ViewById;
 import com.ananda.tailing.bike.R;
 import com.ananda.tailing.bike.data.BaseResponse;
 import com.ananda.tailing.bike.data.CarInfoResponse;
+import com.ananda.tailing.bike.data.Constants;
 import com.ananda.tailing.bike.entity.CarInfo;
 import com.ananda.tailing.bike.net.HttpExecute;
 import com.ananda.tailing.bike.net.HttpRequest;
@@ -156,7 +157,7 @@ public class CarStatusActivity extends BaseActivity {
 	
 	private void getCarState(){
 
-		String strUrl = String.format("http://gps.qdigo.net:13080/bike/getBikeDetail/%s", MyApplication.DEVIDE_ID);
+		String strUrl = String.format(Constants.BIKE_DETAIL_URL, MyApplication.DEVIDE_ID);
 		Request<CarInfoResponse> request = new CustomDataRequest<CarInfoResponse>(strUrl,RequestMethod.GET,CarInfoResponse.class);
 		request.setConnectTimeout(60 * 1000);
 		request.setReadTimeout(60 * 1000);
@@ -189,7 +190,7 @@ public class CarStatusActivity extends BaseActivity {
 	public void showCarState(CarInfo carInfo){
 		if(carInfo == null) return;
 		StringBuffer sb = new StringBuffer();
-		sb.append("你好,"+PreferencesUtils.getString(CarStatusActivity.this, "UserName")+"\n");
+		sb.append("你好,"+MyApplication.MOBILE+"\n");
 		sb.append("当前设备："+carInfo.imei+"\n");
 		if(carInfo.sleep){
 			sb.append("设备状态："+"已休眠\n");
@@ -249,10 +250,10 @@ public class CarStatusActivity extends BaseActivity {
 	
 	private void carControlCefang(){
 		
-		String strUrl = String.format(MyApplication.MAIN_URL+"ops/unlockBike/%s", MyApplication.DEVIDE_ID);
+		String strUrl = String.format(Constants.UNLOCK_URL, MyApplication.DEVIDE_ID);
 		
 		Map<String, String> param = new HashMap<String, String>();
-		param.put("imeiIdOrDeviceId", MyApplication.DEVIDE_ID);
+		param.put(":imei", MyApplication.DEVIDE_ID);
 		
 		HttpRequest<BaseResponse> httpRequest = new HttpRequest<BaseResponse>(this, strUrl, new HttpResponseListener<BaseResponse>() {
 
@@ -286,10 +287,10 @@ public class CarStatusActivity extends BaseActivity {
 	private void carControlBufang(){
 		
 		
-		String strUrl = String.format(MyApplication.MAIN_URL+"ops/lockBike/%s", MyApplication.DEVIDE_ID);
+		String strUrl = String.format(Constants.LOCK_URL, MyApplication.DEVIDE_ID);
 		
 		Map<String, String> param = new HashMap<String, String>();
-		param.put("imeiIdOrDeviceId", MyApplication.DEVIDE_ID);
+		param.put(":imei", MyApplication.DEVIDE_ID);
 		
 		HttpRequest<BaseResponse> httpRequest = new HttpRequest<BaseResponse>(this, strUrl, new HttpResponseListener<BaseResponse>() {
 
@@ -318,19 +319,19 @@ public class CarStatusActivity extends BaseActivity {
 			}
 		}, BaseResponse.class, param, "POST", true);
 				
-		httpRequest.addHead("mobileNo", "");
+		/*httpRequest.addHead("mobileNo", "");
 		httpRequest.addHead("mobiledeviceId", "");
-		httpRequest.addHead("accesstoken", "");
+		httpRequest.addHead("accesstoken", "");*/
 		HttpExecute.getInstance().addRequest(httpRequest);
 
 	}
-	
+	//上电
 	private void carControlUpEle(){
 		
-		String strUrl = String.format(MyApplication.MAIN_URL+"ops/startBike/%s", MyApplication.DEVIDE_ID);
+		String strUrl = String.format(Constants.START_URL, MyApplication.DEVIDE_ID);
 		
 		Map<String, String> param = new HashMap<String, String>();
-		param.put("imeiIdOrDeviceId", MyApplication.DEVIDE_ID);
+		param.put(":imei", MyApplication.DEVIDE_ID);
 		
 		HttpRequest<BaseResponse> httpRequest = new HttpRequest<BaseResponse>(this, strUrl, new HttpResponseListener<BaseResponse>() {
 
@@ -367,10 +368,10 @@ public class CarStatusActivity extends BaseActivity {
 	
 	private void carControlCloseEle(){
 	
-		String strUrl = String.format(MyApplication.MAIN_URL+"ops/closeBike/%s", MyApplication.DEVIDE_ID);
+		String strUrl = String.format(Constants.STOP_URL, MyApplication.DEVIDE_ID);
 		
 		Map<String, String> param = new HashMap<String, String>();
-		param.put("imeiIdOrDeviceId", MyApplication.DEVIDE_ID);
+		param.put(":imei", MyApplication.DEVIDE_ID);
 		
 		HttpRequest<BaseResponse> httpRequest = new HttpRequest<BaseResponse>(this, strUrl, new HttpResponseListener<BaseResponse>() {
 
@@ -402,13 +403,12 @@ public class CarStatusActivity extends BaseActivity {
 	
 	private void carSen(int sen){
 		
-		String urlStr = MyApplication.MAIN_URL+"ops/setSensitivity";
 		
 		Map<String,String> params = new HashMap<String, String>();
 		params.put("imei", MyApplication.DEVIDE_ID);
 		params.put("grade", sen+"");
 		
-		HttpRequest<BaseResponse> httpRequest = new HttpRequest<BaseResponse>(this, urlStr, new HttpResponseListener<BaseResponse>() {
+		HttpRequest<BaseResponse> httpRequest = new HttpRequest<BaseResponse>(this, Constants.SET_SENSITIVE_URL, new HttpResponseListener<BaseResponse>() {
 
 			@Override
 			public void onResult(BaseResponse result) {

@@ -3,7 +3,9 @@ package com.ananda.tailing.bike.activity;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -40,10 +42,16 @@ import com.amap.api.services.share.ShareSearch.ShareFromAndTo;
 import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.ananda.tailing.bike.R;
+import com.ananda.tailing.bike.activity.more.LoginActivity;
+import com.ananda.tailing.bike.data.BaseResponse;
 import com.ananda.tailing.bike.data.CarInfoResponse;
+import com.ananda.tailing.bike.data.Constants;
 import com.ananda.tailing.bike.data.PathInfo;
 import com.ananda.tailing.bike.data.PathResponse;
 import com.ananda.tailing.bike.entity.CarInfo;
+import com.ananda.tailing.bike.net.HttpExecute;
+import com.ananda.tailing.bike.net.HttpRequest;
+import com.ananda.tailing.bike.net.HttpResponseListener;
 import com.ananda.tailing.bike.util.MyToast;
 import com.ananda.tailing.bike.util.PreferencesUtils;
 import com.ananda.tailing.bike.view.TitleBarView;
@@ -67,6 +75,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 @EActivity(R.layout.activity_cloud_smart_control_layout)
 public class CloudSmartControlActivity extends BaseActivity implements LocationSource,AMapLocationListener {
@@ -114,10 +123,10 @@ public class CloudSmartControlActivity extends BaseActivity implements LocationS
 			}
 		});
 		
-		initMap();
+		
 		
 		MyApplication.DEVIDE_ID = PreferencesUtils.getString(this, "IMEI", "");
-		
+		initMap();
 		if(MyApplication.DEVIDE_ID.isEmpty()){
 			bindIMEIClick.setText("绑定");
 			showInputDialog();
@@ -230,7 +239,7 @@ public class CloudSmartControlActivity extends BaseActivity implements LocationS
 			if (amapLocation != null&& amapLocation.getErrorCode() == 0) {
 				amapLocationCurr = amapLocation;
 				mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
-				
+				MyApplication.DEVIDE_ID = PreferencesUtils.getString(this, "IMEI", "");
 				if(!MyApplication.DEVIDE_ID.isEmpty()){
 					getCarLocation();
 				}
@@ -324,8 +333,8 @@ public class CloudSmartControlActivity extends BaseActivity implements LocationS
 	
 	private void getCarLocation(){
 		
-		String strUrl = String.format("http://gps.qdigo.net:13080/bike/getBikeDetail/%s", MyApplication.DEVIDE_ID);
-		Request<CarInfoResponse> request = new CustomDataRequest<CarInfoResponse>(strUrl,RequestMethod.GET,CarInfoResponse.class);
+		String strUrl = String.format(Constants.BIKE_DETAIL_URL, MyApplication.DEVIDE_ID);
+		/*Request<CarInfoResponse> request = new CustomDataRequest<CarInfoResponse>(strUrl,RequestMethod.GET,CarInfoResponse.class);
 		request.setConnectTimeout(60 * 1000);
 		request.setReadTimeout(60 * 1000);
 		request.setHeader("context-Type", "application/json");
@@ -352,7 +361,34 @@ public class CloudSmartControlActivity extends BaseActivity implements LocationS
 					long networkMillis) {
 				MyApplication.DEVIDE_ID  = "";
 			}
-		},this,true);
+		},this,true);*/
+		HttpRequest<CarInfoResponse> httpRequest = new HttpRequest<CarInfoResponse>(this, strUrl, new HttpResponseListener<CarInfoResponse>() {
+
+			@Override
+			public void onResult(CarInfoResponse result) {
+				if(result == null) return;
+				
+				if(result.statusCode == 200){
+					if(result!=null){
+						CarInfo carInfo = result.data;
+						deviceIdTv.setText(carInfo.imei);
+						showCurrStatus(carInfo);
+					}
+				}else{
+					Toast.makeText(CloudSmartControlActivity.this, result.message, Toast.LENGTH_SHORT).show();
+				}
+			}
+
+			@Override
+			public void onFail(int code) {
+				
+			}
+		}, CarInfoResponse.class, null, "GET", true);
+				
+		httpRequest.addHead("mobileNo", "");
+		httpRequest.addHead("mobiledeviceId", "");
+		httpRequest.addHead("accesstoken", "");
+		HttpExecute.getInstance().addRequest(httpRequest);
 	}
 
 	@SuppressWarnings("unused")
@@ -425,19 +461,23 @@ public class CloudSmartControlActivity extends BaseActivity implements LocationS
 		});
 		geocodeSearch.getFromLocationAsyn(query);
 	}
-	
+	Marker marker;
 	public void drawMarker(double lat,double lng){
+		//清楚
+		if(marker!=null){
+			marker.remove();
+		}
 		 //绘制marker
-        Marker marker = aMap.addMarker(new MarkerOptions()
+        marker = aMap.addMarker(new MarkerOptions()
                 .position(new LatLng(lat,lng))
                 .title("位置")
                 .snippet("DefaultMarker")
                 .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.icon_gps)))
                 );
 	}
-	
+	Polyline line;
 	private void getPath(){
-		String strUrl = String.format(MyApplication.MAIN_URL+"bike/getTrackByTime/%s", MyApplication.DEVIDE_ID);
+		String strUrl = String.format(Constants.RUN_PATH_URL, MyApplication.DEVIDE_ID);
 		Request<PathResponse> request = new CustomDataRequest<PathResponse>(strUrl,RequestMethod.GET,PathResponse.class);
 		request.setConnectTimeout(60 * 1000);
 		request.setReadTimeout(60 * 1000);
@@ -468,8 +508,10 @@ public class CloudSmartControlActivity extends BaseActivity implements LocationS
 								
 							}
 							
-						
-						Polyline line  =aMap.addPolyline(new PolylineOptions().
+						if(line!=null){
+							line.remove();
+						}
+						 line  =aMap.addPolyline(new PolylineOptions().
 						        addAll(latLngs).width(10).color(Color.argb(255, 255, 0, 0)));
 					}
 				}
@@ -501,11 +543,46 @@ public class CloudSmartControlActivity extends BaseActivity implements LocationS
 					MyToast.showShortToast(this, "二维码格式错误,绑定失败,请重试!");
 					bindIMEIClick.setText("绑定");
 				}else{
-					getCarLocation();
-					bindIMEIClick.setText("解绑");
+					bindImeiAndPhone();
 				}
 			}
 			break;
 		}
+	}
+
+	//绑定号码和imei
+	private void bindImeiAndPhone() {
+		// TODO Auto-generated method stub
+		if(!PreferencesUtils.getBoolean(this, "LoginFlag")){
+			startActivity(new Intent(this,LoginActivity.class));
+			return;
+		}
+		Map<String,String> params = new HashMap<String, String>();
+		params.put("imei", MyApplication.DEVIDE_ID);
+		params.put("mobileNo",MyApplication.MOBILE);
+		
+		HttpRequest<BaseResponse> httpRequest = new HttpRequest<BaseResponse>(this, Constants.SET_SENSITIVE_URL, new HttpResponseListener<BaseResponse>() {
+
+			@Override
+			public void onResult(BaseResponse result) {
+				if(result == null) return;
+				if(result.statusCode == 200){
+					bindIMEIClick.setText("解绑");
+					MyToast.showShortToast(CloudSmartControlActivity.this, "成功绑定设备:"+MyApplication.DEVIDE_ID);
+				}else{
+					Toast.makeText(CloudSmartControlActivity.this, result.message, Toast.LENGTH_SHORT).show();
+				}
+			}
+
+			@Override
+			public void onFail(int code) {
+				
+			}
+		}, BaseResponse.class, params, "POST", true);
+				
+		httpRequest.addHead("mobileNo", "");
+		httpRequest.addHead("mobiledeviceId", "");
+		httpRequest.addHead("accesstoken", "");
+		HttpExecute.getInstance().addRequest(httpRequest);
 	}
 }

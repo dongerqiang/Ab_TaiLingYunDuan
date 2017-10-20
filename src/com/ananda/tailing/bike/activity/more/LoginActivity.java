@@ -1,12 +1,15 @@
 package com.ananda.tailing.bike.activity.more;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.http.entity.StringEntity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -22,15 +25,22 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
 import com.ananda.tailing.bike.R;
 import com.ananda.tailing.bike.activity.BaseActivity;
+import com.ananda.tailing.bike.activity.CarStatusActivity;
 import com.ananda.tailing.bike.activity.MoreActivity;
 import com.ananda.tailing.bike.activity.MyApplication;
 import com.ananda.tailing.bike.activity.RomtorActivity;
+import com.ananda.tailing.bike.data.BaseResponse;
 import com.ananda.tailing.bike.data.CarInfoResponse;
+import com.ananda.tailing.bike.data.Constants;
 import com.ananda.tailing.bike.entity.CarInfo;
+import com.ananda.tailing.bike.net.HttpExecute;
+import com.ananda.tailing.bike.net.HttpRequest;
+import com.ananda.tailing.bike.net.HttpResponseListener;
 import com.ananda.tailing.bike.util.CommonUtils;
 import com.ananda.tailing.bike.util.HttpAPI;
 import com.ananda.tailing.bike.util.HttpRestClient;
@@ -260,7 +270,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	 * 提交登录数据
 	 */
 	private void submitLogin() {	
-		showProgressDialog(LoginActivity.this, "请稍后...");
+		/*showProgressDialog(LoginActivity.this, "请稍后...");
 		try {
 			JSONObject jsonLogin = new JSONObject();
 			jsonLogin.put("Name", etUserName.getText().toString().trim());
@@ -325,7 +335,40 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
+		
+		Map<String, String> param = new HashMap<String, String>();
+		param.put("verificationCode", etPassword.getText().toString().trim());
+		param.put("mobileNo", etUserName.getText().toString().trim());
+		
+		HttpRequest<BaseResponse> httpRequest = new HttpRequest<BaseResponse>(this, Constants.LOGIN_URL, new HttpResponseListener<BaseResponse>() {
+
+			@Override
+			public void onResult(BaseResponse result) {
+				if(result == null) return;
+				if(result.statusCode == 200){
+					MyToast.showShortToast(LoginActivity.this, "登录成功！");	
+					PreferencesUtils.putBoolean(LoginActivity.this, "LoginFlag", true); 
+					MyApplication.MOBILE = etUserName.getText().toString().trim();
+					PreferencesUtils.putString(LoginActivity.this, "UserName", etUserName.getText().toString().trim()); 
+					
+					startActivity(new Intent(LoginActivity.this, RomtorActivity.class));
+					LoginActivity.this.finish();
+				}else{
+					Toast.makeText(LoginActivity.this, result.message, Toast.LENGTH_SHORT).show();
+				}
+			}
+
+			@Override
+			public void onFail(int code) {
+				
+			}
+		}, BaseResponse.class, param, "POST", true);
+				
+		httpRequest.addHead("mobileNo", "");
+		httpRequest.addHead("mobiledeviceId", "");
+		httpRequest.addHead("accesstoken", "");
+		HttpExecute.getInstance().addRequest(httpRequest);
 	}
 	
 	/**
@@ -443,33 +486,31 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	}
 	
 	private void getPinCode() {
-		//todo
-		// TODO Auto-generated method stub
-		String strUrl = String.format("http://gps.qdigo.net:13080/bike/getBikeDetail/%s", MyApplication.DEVIDE_ID);
-		Request<CarInfoResponse> request = new CustomDataRequest<CarInfoResponse>(strUrl,RequestMethod.GET,CarInfoResponse.class);
-		request.setConnectTimeout(60 * 1000);
-		request.setReadTimeout(60 * 1000);
-		request.setHeader("context-Type", "application/json");
-		request.setHeader("mobileNo", "");
-		request.setHeader("mobiledeviceId", "");
-		request.setHeader("accesstoken",  "");
-		CallServer.getRequestInstance().add(this, strUrl.hashCode(), request, new HttpListener<CarInfoResponse>() {
+			Map<String, String> param = new HashMap<String, String>();
+			param.put("mobileNo", etUserName.getText().toString().trim());
+			
+			HttpRequest<BaseResponse> httpRequest = new HttpRequest<BaseResponse>(this, Constants.PIN_CODE_URL, new HttpResponseListener<BaseResponse>() {
 
-			@Override
-			public void onSucceed(int what, Response<CarInfoResponse> response) {
-				if(response.isSucceed() && response.get() != null){
-					if(response.get().data != null){
-					
-						
+				@Override
+				public void onResult(BaseResponse result) {
+					if(result == null) return;
+					if(result.statusCode == 200){
+						MyToast.showShortToast(LoginActivity.this, "获取验证码成功！");		
+					}else{
+						Toast.makeText(LoginActivity.this, result.message, Toast.LENGTH_SHORT).show();
 					}
 				}
-			}
 
-			@Override
-			public void onFailed(int what, String url, Object tag, Exception exception, int responseCode,
-					long networkMillis) {
-//				MyApplication.DEVIDE_ID  = "";
-			}
-		},this,true);
-	}
+				@Override
+				public void onFail(int code) {
+					
+				}
+			}, BaseResponse.class, param, "POST", true);
+					
+			httpRequest.addHead("mobileNo", "");
+			httpRequest.addHead("mobiledeviceId", "");
+			httpRequest.addHead("accesstoken", "");
+			HttpExecute.getInstance().addRequest(httpRequest);
+
+		}
 }

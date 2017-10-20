@@ -40,7 +40,7 @@ public class MyApplication extends FrameApplication	 {
 	
 	public static String DEVIDE_ID= "";
 	
-	
+	public static String MOBILE ="";
 	public static String MAIN_URL = "http://gps.qdigo.net:13080/";
 	
 	 private static MyApplication instance;
@@ -60,6 +60,7 @@ public class MyApplication extends FrameApplication	 {
 		instance = this;
 		 JPushInterface.init(getApplicationContext());
 		com.netease.nis.bugrpt.CrashHandler.init(this.getApplicationContext());
+		MOBILE =  PreferencesUtils.getString(this, "UserName", "");
 	}
 	
 	public static void initImageLoader(Context context) {

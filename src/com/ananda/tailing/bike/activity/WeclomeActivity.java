@@ -32,7 +32,7 @@ public class WeclomeActivity extends Activity {
 
 	private String userId;  // 用户登录ID
 	private Intent intent;
-	
+	boolean isLogin = false;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -41,19 +41,28 @@ public class WeclomeActivity extends Activity {
 		CommonUtils.subActivityStack.add(this);
 		
 		userId = PreferencesUtils.getString(this, "UserId");
-		
+		isLogin = PreferencesUtils.getBoolean(this, "LoginFlag", false); 
 		new Handler().postDelayed(new Runnable() {
 			
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				if(!TextUtils.isEmpty(userId) && !userId.equals("0")) {
+				/*if(!TextUtils.isEmpty(userId) && !userId.equals("0")) {
 					intent = new Intent(WeclomeActivity.this, RomtorActivity.class);
 				} else {
 					intent = new Intent(WeclomeActivity.this, LoginActivity.class);
 					intent.putExtra("first", "0");
 				}				
-				startActivity(intent);				
+				startActivity(intent);	*/
+				
+				if(isLogin){
+					intent = new Intent(WeclomeActivity.this, RomtorActivity.class);
+				}else{
+					intent = new Intent(WeclomeActivity.this, LoginActivity.class);
+					intent.putExtra("first", "0");
+				
+				}
+				startActivity(intent);
 			}
 		}, 2000);
 		

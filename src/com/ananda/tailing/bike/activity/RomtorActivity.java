@@ -13,6 +13,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ananda.tailing.bike.R;
 import com.ananda.tailing.bike.activity.more.ArsReceiver;
+import com.ananda.tailing.bike.activity.more.LoginActivity;
 import com.ananda.tailing.bike.data.BaseResponse;
 import com.ananda.tailing.bike.entity.RideReportInfo;
 import com.ananda.tailing.bike.smartbike.DeviceAdapter;
@@ -568,10 +569,16 @@ public class RomtorActivity extends BaseActivity implements OnClickListener {
 		}
 		case R.id.button_car_cloud:
 			{
-//				com.ananda.tailing.bike.activity.CloudSmartControlActivity_.intent(context).start();
-				Intent captureIntent = new Intent(this,CaptureActivity.class);
+				if(!PreferencesUtils.getBoolean(this, "LoginFlag")){
+					startActivity(new Intent(this,LoginActivity.class));
+					
+				}else{
+					
+				com.ananda.tailing.bike.activity.CloudSmartControlActivity_.intent(context).start();
+				}
+				/*Intent captureIntent = new Intent(this,CaptureActivity.class);
 				captureIntent.putExtra("isFromCloud", true);
-				startActivityForResult(captureIntent, REQUEST_SCAN_IMEI);
+				startActivityForResult(captureIntent, REQUEST_SCAN_IMEI);*/
 			}
 		}
 	}

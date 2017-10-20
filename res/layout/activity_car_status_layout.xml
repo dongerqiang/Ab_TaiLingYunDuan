@@ -35,7 +35,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:lineSpacingExtra="4dp"
-                android:text="布防控制：布防"
+                android:text="布防控制"
                 android:textColor="#fff"
                 android:textSize="16sp" />
 
