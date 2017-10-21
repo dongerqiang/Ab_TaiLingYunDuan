@@ -554,7 +554,9 @@ public class CloudSmartControlActivity extends BaseActivity implements LocationS
 	private void bindImeiAndPhone() {
 		// TODO Auto-generated method stub
 		if(!PreferencesUtils.getBoolean(this, "LoginFlag")){
-			startActivity(new Intent(this,LoginActivity.class));
+			Intent intent = new Intent(this,LoginActivity.class);
+			intent.putExtra("first", "0");
+			startActivity(intent);
 			return;
 		}
 		Map<String,String> params = new HashMap<String, String>();

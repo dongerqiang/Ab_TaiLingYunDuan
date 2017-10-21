@@ -570,8 +570,9 @@ public class RomtorActivity extends BaseActivity implements OnClickListener {
 		case R.id.button_car_cloud:
 			{
 				if(!PreferencesUtils.getBoolean(this, "LoginFlag")){
-					startActivity(new Intent(this,LoginActivity.class));
-					
+					Intent intent = new Intent(this,LoginActivity.class);
+					intent.putExtra("first", "0");
+					startActivity(intent);
 				}else{
 					
 				com.ananda.tailing.bike.activity.CloudSmartControlActivity_.intent(context).start();

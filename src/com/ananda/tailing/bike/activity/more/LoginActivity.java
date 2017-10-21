@@ -37,6 +37,9 @@ import com.ananda.tailing.bike.activity.RomtorActivity;
 import com.ananda.tailing.bike.data.BaseResponse;
 import com.ananda.tailing.bike.data.CarInfoResponse;
 import com.ananda.tailing.bike.data.Constants;
+import com.ananda.tailing.bike.data.LoginResponse;
+import com.ananda.tailing.bike.data.StringResponse;
+import com.ananda.tailing.bike.data.UserBean;
 import com.ananda.tailing.bike.entity.CarInfo;
 import com.ananda.tailing.bike.net.HttpExecute;
 import com.ananda.tailing.bike.net.HttpRequest;
@@ -341,16 +344,20 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		param.put("verificationCode", etPassword.getText().toString().trim());
 		param.put("mobileNo", etUserName.getText().toString().trim());
 		
-		HttpRequest<BaseResponse> httpRequest = new HttpRequest<BaseResponse>(this, Constants.LOGIN_URL, new HttpResponseListener<BaseResponse>() {
+		HttpRequest<LoginResponse> httpRequest = new HttpRequest<LoginResponse>(this, Constants.LOGIN_URL, new HttpResponseListener<LoginResponse>() {
 
 			@Override
-			public void onResult(BaseResponse result) {
+			public void onResult(LoginResponse result) {
 				if(result == null) return;
 				if(result.statusCode == 200){
 					MyToast.showShortToast(LoginActivity.this, "登录成功！");	
 					PreferencesUtils.putBoolean(LoginActivity.this, "LoginFlag", true); 
 					MyApplication.MOBILE = etUserName.getText().toString().trim();
 					PreferencesUtils.putString(LoginActivity.this, "UserName", etUserName.getText().toString().trim()); 
+					UserBean bean = result.data;
+					if(bean!=null && !TextUtils.isEmpty(bean.imei)){
+						PreferencesUtils.putString(LoginActivity.this, "IMEI", bean.imei); 						
+					}
 					
 					startActivity(new Intent(LoginActivity.this, RomtorActivity.class));
 					LoginActivity.this.finish();
@@ -363,7 +370,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 			public void onFail(int code) {
 				
 			}
-		}, BaseResponse.class, param, "POST", true);
+		}, LoginResponse.class, param, "POST", true);
 				
 		httpRequest.addHead("mobileNo", "");
 		httpRequest.addHead("mobiledeviceId", "");
